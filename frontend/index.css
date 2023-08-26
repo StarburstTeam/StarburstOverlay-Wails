@@ -1,0 +1,400 @@
+@font-face {
+    font-family: "consolas";
+    src: url("consolas.ttf");
+}
+
+html,
+body {
+    background-color: rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    margin: 0;
+    height: 100%;
+}
+
+.title {
+    font-family: consolas;
+    font-size: 40px;
+    color: aqua;
+    display: inline;
+    font-weight: bold;
+}
+
+.menu {
+    background: rgba(2, 2, 2, 0.199);
+    -webkit-app-region: drag;
+    height: 40px;
+    width: 100%;
+}
+
+#quit {
+    background: transparent;
+    background-image: url("../src/img/quit1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+#quit:hover {
+    background: transparent;
+    background-image: url("../src/img/quit2.png");
+    background-size: cover;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+#minimize {
+    background: transparent;
+    background-image: url("../src/img/min1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+#minimize:hover {
+    background: transparent;
+    background-image: url("../src/img/min2.png");
+    background-size: cover;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+#show {
+    background: transparent;
+    background-image: url("../src/img/show1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+#show:hover {
+    background: transparent;
+    background-image: url("../src/img/show2.png");
+    background-size: cover;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.settings {
+    background: transparent;
+    background-image: url("../src/img/settings1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+.settings_stay,
+.settings:hover {
+    background: transparent;
+    background-image: url("../src/img/settings2.png");
+    background-size: cover;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-out;
+}
+
+.cps {
+    background: transparent;
+    background-image: url("../src/img/cps1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+.cps_stay,
+.cps:hover {
+    background: transparent;
+    background-image: url("../src/img/cps2.png");
+    background-size: cover;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-out;
+}
+
+.search {
+    background: transparent;
+    background-image: url("../src/img/search1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+.search_stay,
+.search:hover {
+    background: transparent;
+    background-image: url("../src/img/search2.png");
+    background-size: cover;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-out;
+}
+
+.info {
+    background: transparent;
+    background-image: url("../src/img/info1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+.info_stay,
+.info:hover {
+    background: transparent;
+    background-image: url("../src/img/info2.png");
+    background-size: cover;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-out;
+}
+
+.update {
+    background: transparent;
+    background-image: url("../src/img/update1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    -webkit-app-region: no-drag;
+    transition: all 0.2s ease-out;
+}
+
+.update:hover {
+    background: transparent;
+    background-image: url("../src/img/update2.png");
+    background-size: cover;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    height: 35px;
+    width: 35px;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease-out;
+}
+
+.main {
+    font-family: consolas;
+    font-weight: bolder;
+    color: aqua;
+    overflow-y: scroll;
+}
+
+table {
+    font-family: consolas;
+    font-weight: bolder;
+    color: aqua;
+    overflow-y: scroll;
+    border: 1px solid #333;
+    border-style: solid;
+    border-collapse: collapse;
+}
+
+th {
+    border-left: 1px solid aqua;
+    border-top: 1px solid aqua;
+    border-bottom: 1px solid aqua;
+}
+
+td {
+    border-left: 1px solid aqua;
+    border-top: 1px solid aqua;
+    border-bottom: 1px solid aqua;
+    border: 1px solid aqua;
+    border-style: solid;
+    border-collapse: collapse;
+}
+
+thead,
+tfoot {
+    background-color: aqua;
+    color: aqua;
+}
+
+.subtitle {
+    display: inline;
+    position: absolute;
+    text-align: center;
+    top: 25px;
+    font-size: 25px;
+    color: aqua;
+    padding-inline-start: 10px;
+}
+
+.data {
+    display: inline;
+    position: absolute;
+    text-align: center;
+    top: 70px;
+    font-size: 15px;
+    white-space: break-spaces;
+    padding-inline-start: 10px;
+}
+
+input {
+    background: #FFFFFF;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    font-family: "consolas";
+    font-size: 18px;
+    color: #000000;
+    text-indent: 10px;
+}
+
+.dataStyle {
+    margin: 10px;
+    font-size: 15px;
+    font-family: "consolas";
+    color: #FFFFFF;
+    background-color: #00000060;
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 1s ease-out;
+}
+
+.infoFont {
+    font-size: 25px;
+    font-family: "consolas";
+    color: #FFFFFF;
+}
+
+.searchButton,
+.download {
+    background: transparent;
+    font-family: consolas;
+    font-size: 15px;
+    color: #FFFFFF;
+}
+
+select {
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    font-size: 20px;
+    font-weight: 300;
+    color: #ffffff;
+    line-height: 30px;
+    background: rgba(82, 82, 82, 0.582);
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #b9b9b9;
+    font-family: consolas;
+    display: inline-block;
+}
+
+.setting_subtitle {
+    text-align: center;
+    font-size: 25px;
+    color: aqua;
+    font-family: consolas;
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.setting_button {
+    background: transparent;
+    font-family: consolas;
+    font-size: 20px;
+    font-weight: 300;
+    color: #ffffff;
+    background: rgba(82, 82, 82, 0.582);
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #b9b9b9;
+    display: inline-block;
+    padding: 0 22px;
+}
+
+.infopage {
+    display: inline-block;
+    font-family: "consolas";
+    font-size: 18px;
+    margin-top: 5px;
+    text-align: center;
+    filter: drop-shadow(2px 2px rgb(0, 0, 0));
+}
+
+.tooltip .tooltiptext {
+    padding: 5px;
+    background-color: gray;
+    border-color: aqua;
+    border-style: solid;
+    border-width: 1px;
+    color: aqua;
+    text-align: center;
+    border-radius: 6px;
+    opacity: 0;
+    transition: all 0.2s ease-out;
+    position: absolute;
+    z-index: 1;
+    min-width: 10px;
+}
+
+.tooltip:hover .tooltiptext {
+    opacity: 1;
+}
+
+.message {
+    background-color: #ff0000d0;
+    font-family: "consolas";
+    font-size: larger;
+    color: white;
+    padding: 5px;
+    border-radius: 6px;
+    transition: all 0.3s ease-out;
+    text-align: center;
+}
+
+.taginfo {
+    color: aqua;
+    text-align: left;
+    font-size: large;
+    font-family: consolas;
+}

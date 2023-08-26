@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Starburst Overlay</title>
+    <script src="js/i18n.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/hypixel.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/i18n/hypixel_i18n.js"></script>
+    <link rel="styleSheet" href="scrollbar.css">
+    <link rel="styleSheet" href="switch.css">
+    <link rel="styleSheet" href="index.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<body>
+    <div id="menu" class="menu">
+        <div class="title" style="position:absolute;left:5px;top:-5px">Starburst</div>
+        <div id="buttons" style="float:right;margin-right:5px;margin-top:2px;">
+            <button id="minimize" onclick="currentWindow.minimize()"></button>
+            <button id="quit" onclick="currentWindow.close()"></button>
+        </div>
+    </div>
+    <div id="searchPage" style="width:100%;height:560px">
+        <div id="playerinput">
+            <div id="playerNameLabel" class="infoFont" style="position:absolute;top:55px;left:30px">Player Name :</div>
+            <input id="playername" type="text" style="position: absolute;top:55px;left:230px;width:350px;height:25px;">
+            <button class="searchButton" id="searchButton"
+                style="position: absolute;top:55px;left:600px;width:80px;height:32px" onclick="search()">Go!</button>
+        </div>
+        <div id="searchResult" style="height:auto">
+            <div style="margin-top:10px;position:absolute;top:85px;left:10px;width:380px;height:80%;overflow-y:scroll">
+                <div id="playerName" class="dataStyle" style="font-size: 20px"></div>
+                <div id="networkinfo" class="dataStyle"></div>
+                <div id="guild" class="dataStyle"></div>
+                <div id="status" class="dataStyle"></div>
+            </div>
+            <div id="details"
+                style="margin-top:10px;position:absolute;top:85px;left:400px;width:420px;height:80%;overflow-y:scroll">
+            </div>
+            <div style="position: absolute;top:50px;left:850px;width:120px;height:270px">
+                <img id="skin">
+                <button id="downloadSkin" class="download"
+                    style="position:absolute;top:280px;left:-20px;width:160px;height:30px"
+                    onclick="downloadSkin()">Download Skin</button>
+                <div id="socialMedia" style="position:absolute;top:320px;left:-20px;width:auto"></div>
+            </div>
+        </div>
+    </div>
+</body>

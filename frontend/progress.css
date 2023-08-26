@@ -1,0 +1,17 @@
+.progress_circle {
+    fill: none;
+    stroke: aqua;
+    stroke-width: 4;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    stroke-linecap: round;
+    animation: circle 3s infinite;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+.progress_text {
+    font-size: 15px;
+    font-family: "consolas";
+}

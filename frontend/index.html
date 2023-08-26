@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Starburst Overlay</title>
+    <script src="src/tail.js" type="module"></script>
+    <script src="src/blacklist.js" type="module"></script>
+    <script src="src/i18n.js" type="module"></script>
+    <script src="src/util.js" type="module"></script>
+    <script src="src/hypixel.js" type="module"></script>
+    <script src="src/index.js" type="module"></script>
+    <script src="src/i18n/hypixel_i18n.js" type="module"></script>
+    <script src="src/cps.js" type="module"></script>
+    <link rel="styleSheet" href="scrollbar.css">
+    <link rel="styleSheet" href="switch.css">
+    <link rel="styleSheet" href="progress.css">
+    <link rel="styleSheet" href="index.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<body>
+    <script>
+        window.runtime.WindowMinimise();
+        setTimeout(_ => window.runtime.WindowUnminimise(), 100);
+    </script>
+    <div id="menu" class="menu">
+        <div class="title" style="position:absolute;left:5px;top:-5px">Starburst</div>
+        <div id="buttons" style="float:right;margin-right:5px;margin-top:2px;">
+            <svg style="width:36px;height:36px;">
+                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_remain"></circle>
+                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
+                    <tspan class="progress_text" id="api_limit_remain_num">0</tspan>
+                </text>
+            </svg>
+            <svg style="width:36px;height:36px;">
+                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_reset"></circle>
+                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
+                    <tspan class="progress_text" id="api_limit_reset_num">0</tspan>
+                </text>
+            </svg>
+            <button id="update" class="update"
+                onclick="shell.openExternal('https://github.com/IAFEnvoy/StarburstOverlay/releases')" hidden></button>
+            <button id="cps" class="cps"></button>
+            <button id="search" class="search"></button>
+            <button id="settings" class="settings"></button>
+            <button id="info" class="info"></button>
+            <button id="show"></button>
+            <button id="minimize"></button>
+            <button id="quit"></button>
+        </div>
+    </div>
+    <div style="height:20px">
+        <div class="title" id="current_ping" style="position:relative;font-size:20px;top:-3px;white-space:nowrap;">
+        </div>
+    </div>
+    <table id="main" border="1"
+        style="display:inline-block;width:100%;top:5px;height:calc(100% - 65px);overflow-y:scroll;font-size:15px;position:relative">
+    </table>
+    <div id="settingPage" hidden>
+        <br>
+        <div id="basic" class="setting_subtitle" style="font-weight: bolder;"></div><br><br>
+        <div class="tooltip">
+            <div class="setting_subtitle" id="language">Hypixel In-Game Language:</div>
+            <select id="lang" style="height:auto"
+                onchange="config.set('lang', document.getElementById('lang').value);window.location.href='./index.html'">
+                <option value="en_us">English</option>
+                <option value="zh_cn">简体中文</option>
+            </select>
+            <span class="tooltiptext" id="language_tooltip">The language you set in game</span>
+        </div><br>
+        <div class="tooltip">
+            <div class="setting_subtitle" style="float:left" id="setting_log_path">Log Path :</div>
+            <button class="setting_button" onclick="selectLogFile()" id="setting_change_log_path">Set Log
+                Path</button>
+            <span class="tooltiptext" id="log_tooltip">The log path your current client used.<br>Click for more
+                info.</span>
+        </div><br>
+        <div class="tooltip">
+            <div class="setting_subtitle" style="float:left" id="api_key">Hypixel API Key</div>
+            <input id="apiKey" type="password" style="width: 380px;" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                onchange="hypixel.apiKey=document.getElementById('apiKey').value">
+            <button class="setting_button" id="copy_api_key" onclick="copyApiKey()">Copy</button>
+            <br>
+            <span class="tooltiptext" id="api_tooltip">Get the API key from <a>developer.hypixel.net</a></span>
+        </div><br>
+        <div id="extra" class="setting_subtitle" style="font-weight: bolder;"></div><br><br>
+        <div class="tooltip">
+            <div class="setting_subtitle" id="setting_game_type">Game Type :</div>
+            <select id="infotype" style="height:auto" onchange="changeDiv()">
+                <option value="bw">Bed War</option>
+                <option value="sw">Sky War</option>
+                <option value="mm">Murder Mystery</option>
+                <option value="duel">Duel</option>
+                <option value="tnt">TNT Game</option>
+                <option value="uhc">UHC Champion</option>
+                <option value="mw">Mega Wall</option>
+                <option value="ww">Wool War</option>
+                <option value="bsg">Blitz Survive Game</option>
+            </select>
+            <select id="subGame" style="height:auto" onchange="setSubGame()"></select>
+            <br>
+            <span class="tooltiptext" id="game_mode_tooltip">The game you currently playing</a></span>
+        </div><br>
+        <div>
+            <div class="setting_subtitle" id="setting_auto_shrink">Auto Shrink :</div>
+            <label class="switch" style="top:10px;">
+                <input id="autoShrink" type="checkbox"
+                    onchange="config.set('autoShrink', document.getElementById('autoShrink').checked)">
+                <div class="slider round"></div>
+            </label>
+        </div><br>
+        <div>
+            <div class="setting_subtitle" id="setting_notification">Game Start Notification :</div>
+            <label class="switch" style="top:10px;">
+                <input id="notification" type="checkbox"
+                    onchange="config.set('notification', document.getElementById('notification').checked)">
+                <div class="slider round"></div>
+            </label>
+        </div><br>
+    </div>
+    <br>
+    <div id="cpsPage" style="text-align:center" hidden>
+        <div>
+            <button class="setting_button" onclick="setTestTime(1)" id="cps_1s">1s</button>
+            <button class="setting_button" onclick="setTestTime(5)" id="cps_5s">5s</button>
+            <button class="setting_button" onclick="setTestTime(10)" id="cps_10s">10s</button>
+            <button class="setting_button" onclick="setTestTime(20)" id="cps_20s">20s</button>
+        </div>
+        <h3 id="cpsTestTime" style="color:aqua">Test Time : 10s</h3>
+        <button id="testCpsButton" class="setting_button" style="margin:20px;width:50%;height:200px"
+            onmousedown="onTestClick(event.button)">Click to Start</button>
+        <h3 id="cpsTestResult" style="color:aqua"></h3>
+        <button class="setting_button" onclick="resetTest()" id="cps_reset">Reset</button>
+    </div>
+    <div id="infoPage" hidden>
+        <div>
+            <div class="infopage" style="margin-left:15px;width:100%;margin-left:2px;text-align:left;color:aqua"
+                id="color_key">&nbsp; Stats Color Key :</div>
+            <div class="infopage" style="background:#AAAAAA;color:#000000;width:16%;margin-left:5px" id="bad">BAD</div>
+            <div class="infopage" style="background:#FFFFFF;color:#AAAAAA;width:16%" id="ok">OK</div>
+            <div class="infopage" style="background:#55FF55;color:#c3ffc3;width:16%" id="good">GOOD</div>
+            <div class="infopage" style="background:#55FFFF;color:#0000ff;width:16%" id="epic">EPIC</div>
+            <div class="infopage" style="background:#FF5555;color:#f990ff;width:16%" id="legend">LEGEND</div>
+            <div class="infopage" style="background:#FFAA00;color:#ffff00;width:16%" id="god">GOD</div>
+        </div>
+        <div class="taginfo" id="TagInfo"></div>
+        <p class="infopage" style="color:aqua" id="link_github"
+            onclick="shell.openExternal('https://github.com/IAFEnvoy/StarburstOverlay/issues')">&nbsp; If you meet any
+            problems or ideas, tell me on my Github! (Click here to open)</p>
+        <!--TODO-->
+    </div>
+    <div id="message" class="message" style="position:absolute;left:25%;width:50%;height:auto;bottom:50px;">
+    </div>
+</body>

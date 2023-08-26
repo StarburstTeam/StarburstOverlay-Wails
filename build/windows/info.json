@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "3.0.0"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "3.0.0",
+			"CompanyName": "IAFEnvoy",
+			"FileDescription": "Hypixel Stats Overlay with multi-lang and more functions",
+			"LegalCopyright": "IAFEnvoy",
+			"ProductName": "Starburst Overlay",
+			"Comments": "{{.Info.Comments}}"
+		}
+	}
+}
