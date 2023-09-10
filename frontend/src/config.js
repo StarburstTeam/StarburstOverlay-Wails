@@ -10,7 +10,7 @@ export class Config {
             this.config = JSON.parse(data);
         } catch (err) {
             console.log(err)
-            this.config = defaultValue;
+            this.config = this.defaultValue;
         }
         console.log(this.config);
     }

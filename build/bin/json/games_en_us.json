@@ -1,0 +1,147 @@
+[
+  {
+    "id": 2,
+    "short": "quake",
+    "name": "Quake"
+  },
+  {
+    "id": 3,
+    "short": "walls",
+    "name": "Walls"
+  },
+  {
+    "id": 4,
+    "short": "paintball",
+    "name": "Paintball"
+  },
+  {
+    "id": 5,
+    "short": "bsg",
+    "name": "Blitz Survival Games"
+  },
+  {
+    "id": 6,
+    "short": "tnt",
+    "name": "TNT Games"
+  },
+  {
+    "id": 7,
+    "short": "vampirez",
+    "name": "VampireZ"
+  },
+  {
+    "id": 13,
+    "short": "mw",
+    "name": "Mega Walls"
+  },
+  {
+    "id": 14,
+    "short": "arcade",
+    "name": "Arcade"
+  },
+  {
+    "id": 17,
+    "short": "arena",
+    "name": "Arena"
+  },
+  {
+    "id": 20,
+    "short": "uhc",
+    "name": "UHC Champions"
+  },
+  {
+    "id": 21,
+    "short": "mcgo",
+    "name": "Cops and Crims"
+  },
+  {
+    "id": 23,
+    "short": "warlord",
+    "name": "Warlords"
+  },
+  {
+    "id": 24,
+    "short": "smash",
+    "name": "Smash Heroes"
+  },
+  {
+    "id": 25,
+    "short": "turbo",
+    "name": "Turbo Kart Racers"
+  },
+  {
+    "id": 26,
+    "short": "housing",
+    "name": "Housing"
+  },
+  {
+    "id": 51,
+    "short": "sw",
+    "name": "SkyWars"
+  },
+  {
+    "id": 52,
+    "short": "cw",
+    "name": "Crazy Walls"
+  },
+  {
+    "id": 54,
+    "short": "suhc",
+    "name": "Speed UHC"
+  },
+  {
+    "id": 55,
+    "short": "sc",
+    "name": "SkyClash"
+  },
+  {
+    "id": 56,
+    "short": "classic",
+    "name": "Classic Games"
+  },
+  {
+    "id": 57,
+    "short": "pt",
+    "name": "Prototype"
+  },
+  {
+    "id": 58,
+    "short": "bw",
+    "name": "Bed Wars"
+  },
+  {
+    "id": 59,
+    "short": "mm",
+    "name": "Murder Mystery"
+  },
+  {
+    "id": 60,
+    "short": "bb",
+    "name": "Build Battle"
+  },
+  {
+    "id": 61,
+    "short": "duel",
+    "name": "Duels"
+  },
+  {
+    "id": 63,
+    "short": "sb",
+    "name": "SkyBlock"
+  },
+  {
+    "id": 64,
+    "short": "pit",
+    "name": "The Pit"
+  },
+  {
+    "id": 65,
+    "short": "replay",
+    "name": "Replay"
+  },
+  {
+    "id": 67,
+    "short": "smp",
+    "name": "SMP"
+  }
+]

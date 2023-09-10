@@ -1,0 +1,121 @@
+{
+    "id": "zh_cn",
+    "name": "简体中文",
+    "values": {
+        "chat_online": "ONLINE: ",
+        "chat_player_join": "加入了游戏",
+        "chat_player_quit": "已退出",
+        "chat_sending": "正在前往",
+        "chat_join_lobby": "入了大厅",
+        "chat_final_kill": "最终击杀",
+        "chat_disconnect": "断开连接",
+        "chat_reconnect": "重新连接",
+        "chat_game_start_1_second": "游戏将在1秒后开始",
+        "chat_game_start_0_second": "游戏将在0秒后开始",
+        "notification_start_title": "游戏开始",
+        "notification_start_body": "",
+        "notification_update_available_title": "有可用更新",
+        "notification_update_available_body": "点击更新按钮打开下载界面",
+        "error_api_key_not_found": "API Key未找到",
+        "error_api_key_invalid": "无效的API Key",
+        "error_api_error": "API错误",
+        "error_log_not_found": "log文件未找到",
+        "error_player_not_found": "未找到此玩家",
+        "error_player_missing": "缺少玩家",
+        "info_set_log_path": "请在设置中设置log路径",
+        "info_api_new": "使用/api new来获取",
+        "info_who": "请在游戏内输入/who",
+        "hud_current_mode": "当前模式：",
+        "hud_select_log_file_title": "选择latest.log文件",
+        "hud_select_log_file_button_label": "选择log文件",
+        "hud_main_level": "等级",
+        "hud_main_players": "玩家",
+        "hud_main_tag": "标签",
+        "cps_second": "秒",
+        "cps_test_time": "当前测试时长：",
+        "cps_time_last": "剩余时间：",
+        "cps_left_click": "左键点击次数：",
+        "cps_right_click": "右键点击次数：",
+        "cps_result_left": "你的左键点击速度为",
+        "cps_result_right": "你的右键点击速度为",
+        "cps_click_to_start": "点此开始测试",
+        "language": "语言：",
+        "guild": "公会：",
+        "error_api_limit_exceeded": "已达到API请求次数限制！请等待重置。",
+        "tag_developer": "开发者",
+        "tag_alt": "可能为小号",
+        "tag_sniper": "可能是狙击",
+        "tag_party": "可能为组队",
+        "tag_guild": "同公会",
+        "tag_mention_guild": "关注的公会"
+    },
+    "page": {
+        "basic": "基础设置",
+        "extra": "高级设置",
+        "api_key":"Hypixel API Key :",
+        "copy_api_key":"复制",
+        "copied_api_key":"已复制",
+        "playerNameLabel": "玩家名：",
+        "searchButton": "搜索",
+        "downloadSkin": "下载皮肤",
+        "setting_game_type": "游戏类型：",
+        "setting_log_path": "log路径：",
+        "setting_change_log_path": "设置log路径",
+        "setting_auto_shrink": "自动折叠：",
+        "setting_notification": "游戏开始提示：",
+        "language": "Hypixel游戏内语言：",
+        "cpsTestTime": "当前测试时长：10秒",
+        "testCpsButton": "点此开始测试",
+        "cps_reset": "重置",
+        "cps_1s": "1秒",
+        "cps_5s": "5秒",
+        "cps_10s": "10秒",
+        "cps_20s": "20秒",
+        "color_key": "&nbsp; 颜色注释：",
+        "bad": "菜！",
+        "ok": "OK",
+        "good": "还行",
+        "epic": "大佬",
+        "legend": "犇",
+        "god": "神",
+        "link_github": "&nbsp; 如果遇到任何问题，可以在Github上发起Issue（点此打开）",
+        "language_tooltip":"你在游戏内设置的语言",
+        "log_tooltip":"The log path your current client used.<br>Click for more info.",
+        "api_tooltip":"Get the API key from developer.hypixel.net",
+        "game_mode_tooltip":"你当前正在玩的游戏模式"
+    },
+    "mode": [
+        {
+            "id": "bw",
+            "name": "起床战争"
+        },
+        {
+            "id": "sw",
+            "name": "空岛战争"
+        },
+        {
+            "id": "mm",
+            "name": "密室杀手"
+        },
+        {
+            "id": "duel",
+            "name": "决斗游戏"
+        },
+        {
+            "id": "uhc",
+            "name": "极限生存冠军"
+        },
+        {
+            "id": "mw",
+            "name": "超级战墙"
+        },
+        {
+            "id": "ww",
+            "name": "羊毛战争"
+        },
+        {
+            "id": "bsg",
+            "name": "闪电饥饿游戏"
+        }
+    ]
+}

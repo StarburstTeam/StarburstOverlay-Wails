@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Starburst Overlay</title>
-    <script src="src/tail.js" type="module"></script>
-    <script src="src/blacklist.js" type="module"></script>
-    <script src="src/i18n.js" type="module"></script>
-    <script src="src/util.js" type="module"></script>
-    <script src="src/hypixel.js" type="module"></script>
-    <script src="src/index.js" type="module"></script>
-    <script src="src/i18n/hypixel_i18n.js" type="module"></script>
-    <script src="src/cps.js" type="module"></script>
+    <script type="module" src="src/blacklist.js"></script>
+    <script type="module" src="src/i18n.js"></script>
+    <script type="module" src="src/util.js"></script>
+    <script type="module" src="src/config.js"></script>
+    <script type="module" src="src/hypixel.js"></script>
+    <script type="module" src="src/index.js"></script>
+    <script type="module" src="src/i18n/hypixel_i18n.js"></script>
+    <script type="module" src="src/cps.js"></script>
     <link rel="styleSheet" href="scrollbar.css">
     <link rel="styleSheet" href="switch.css">
     <link rel="styleSheet" href="progress.css">
@@ -40,13 +40,13 @@
             </svg>
             <button id="update" class="update"
                 onclick="shell.openExternal('https://github.com/IAFEnvoy/StarburstOverlay/releases')" hidden></button>
-            <button id="cps" class="cps"></button>
-            <button id="search" class="search"></button>
-            <button id="settings" class="settings"></button>
-            <button id="info" class="info"></button>
-            <button id="show"></button>
-            <button id="minimize"></button>
-            <button id="quit"></button>
+            <button id="cps" class="cps" onclick="switchPage('cpsPage')"></button>
+            <button id="search" class="search" onclick="openSearchPage()"></button>
+            <button id="settings" class="settings" onclick="switchPage('settingPage')"></button>
+            <button id="info" class="info" onclick="switchPage('infoPage')"></button>
+            <button id="show" onclick="resize(null, true)"></button>
+            <button id="minimize" onclick="currentWindow.minimize()"></button>
+            <button id="quit" onclick="onClose();currentWindow.close();"></button>
         </div>
     </div>
     <div style="height:20px">
@@ -61,8 +61,7 @@
         <div id="basic" class="setting_subtitle" style="font-weight: bolder;"></div><br><br>
         <div class="tooltip">
             <div class="setting_subtitle" id="language">Hypixel In-Game Language:</div>
-            <select id="lang" style="height:auto"
-                onchange="config.set('lang', document.getElementById('lang').value);window.location.href='./index.html'">
+            <select id="lang" style="height:auto">
                 <option value="en_us">English</option>
                 <option value="zh_cn">简体中文</option>
             </select>
@@ -72,21 +71,25 @@
             <div class="setting_subtitle" style="float:left" id="setting_log_path">Log Path :</div>
             <button class="setting_button" onclick="selectLogFile()" id="setting_change_log_path">Set Log
                 Path</button>
-            <span class="tooltiptext" id="log_tooltip">The log path your current client used.<br>Click for more
-                info.</span>
+            <span class="tooltiptext" id="log_tooltip">The log path your current client used.</span>
         </div><br>
         <div class="tooltip">
             <div class="setting_subtitle" style="float:left" id="api_key">Hypixel API Key</div>
-            <input id="apiKey" type="password" style="width: 380px;" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                onchange="hypixel.apiKey=document.getElementById('apiKey').value">
+            <input id="apiKey" type="password" style="width: 380px;" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
             <button class="setting_button" id="copy_api_key" onclick="copyApiKey()">Copy</button>
             <br>
             <span class="tooltiptext" id="api_tooltip">Get the API key from <a>developer.hypixel.net</a></span>
         </div><br>
+        <div class="tooltip">
+            <div class="setting_subtitle" style="float:left" id="ign_i">IGN :</div>
+            <input id="ign" type="text" style="width: 380px;">
+            <br>
+            <span class="tooltiptext" id="ign_tooltip">Your in game name</span>
+        </div><br>
         <div id="extra" class="setting_subtitle" style="font-weight: bolder;"></div><br><br>
         <div class="tooltip">
             <div class="setting_subtitle" id="setting_game_type">Game Type :</div>
-            <select id="infotype" style="height:auto" onchange="changeDiv()">
+            <select id="infotype" style="height:auto">
                 <option value="bw">Bed War</option>
                 <option value="sw">Sky War</option>
                 <option value="mm">Murder Mystery</option>
@@ -97,45 +100,46 @@
                 <option value="ww">Wool War</option>
                 <option value="bsg">Blitz Survive Game</option>
             </select>
-            <select id="subGame" style="height:auto" onchange="setSubGame()"></select>
+            <select id="subGame" style="height:auto"></select>
             <br>
             <span class="tooltiptext" id="game_mode_tooltip">The game you currently playing</a></span>
         </div><br>
-        <div>
+        <div class="tooltip">
             <div class="setting_subtitle" id="setting_auto_shrink">Auto Shrink :</div>
             <label class="switch" style="top:10px;">
-                <input id="autoShrink" type="checkbox"
-                    onchange="config.set('autoShrink', document.getElementById('autoShrink').checked)">
+                <input id="autoShrink" type="checkbox">
                 <div class="slider round"></div>
             </label>
+            <span class="tooltiptext" id="auto_shrink_tooltip">Shrink the window automatically when game
+                start</a></span>
         </div><br>
-        <div>
+        <div class="tooltip">
             <div class="setting_subtitle" id="setting_notification">Game Start Notification :</div>
             <label class="switch" style="top:10px;">
-                <input id="notification" type="checkbox"
-                    onchange="config.set('notification', document.getElementById('notification').checked)">
+                <input id="notification" type="checkbox">
                 <div class="slider round"></div>
             </label>
+            <span class="tooltiptext" id="start_notification_tooltip">Send a notification when game start</a></span>
         </div><br>
     </div>
     <br>
     <div id="cpsPage" style="text-align:center" hidden>
         <div>
-            <button class="setting_button" onclick="setTestTime(1)" id="cps_1s">1s</button>
-            <button class="setting_button" onclick="setTestTime(5)" id="cps_5s">5s</button>
-            <button class="setting_button" onclick="setTestTime(10)" id="cps_10s">10s</button>
-            <button class="setting_button" onclick="setTestTime(20)" id="cps_20s">20s</button>
+            <button class="setting_button" id="cps_1s">1s</button>
+            <button class="setting_button" id="cps_5s">5s</button>
+            <button class="setting_button" id="cps_10s">10s</button>
+            <button class="setting_button" id="cps_20s">20s</button>
         </div>
         <h3 id="cpsTestTime" style="color:aqua">Test Time : 10s</h3>
-        <button id="testCpsButton" class="setting_button" style="margin:20px;width:50%;height:200px"
-            onmousedown="onTestClick(event.button)">Click to Start</button>
+        <button id="testCpsButton" class="setting_button" style="margin:20px;width:50%;height:200px">Click to
+            Start</button>
         <h3 id="cpsTestResult" style="color:aqua"></h3>
-        <button class="setting_button" onclick="resetTest()" id="cps_reset">Reset</button>
+        <button class="setting_button" id="cps_reset">Reset</button>
     </div>
     <div id="infoPage" hidden>
         <div>
             <div class="infopage" style="margin-left:15px;width:100%;margin-left:2px;text-align:left;color:aqua"
-                id="color_key">&nbsp; Stats Color Key :</div>
+                id="color_key">&nbsp;Stats Color Key :</div>
             <div class="infopage" style="background:#AAAAAA;color:#000000;width:16%;margin-left:5px" id="bad">BAD</div>
             <div class="infopage" style="background:#FFFFFF;color:#AAAAAA;width:16%" id="ok">OK</div>
             <div class="infopage" style="background:#55FF55;color:#c3ffc3;width:16%" id="good">GOOD</div>
@@ -145,7 +149,7 @@
         </div>
         <div class="taginfo" id="TagInfo"></div>
         <p class="infopage" style="color:aqua" id="link_github"
-            onclick="shell.openExternal('https://github.com/IAFEnvoy/StarburstOverlay/issues')">&nbsp; If you meet any
+            onclick="shell.openExternal('https://github.com/IAFEnvoy/StarburstOverlay/issues')">&nbsp;If you meet any
             problems or ideas, tell me on my Github! (Click here to open)</p>
         <!--TODO-->
     </div>

@@ -1,10 +1,13 @@
 import { blacklist } from "./blacklist";
 import { sleep, formatColor, formatColorFromString, toDefault, formatNameString } from "./util";
+import { pushNetworkError } from "./index"
 
 //this file contains api to hypixel
 export class Hypixel {
     constructor(apiKey) {
         this.apiKey = apiKey;
+        this.self_ign = '';
+        this.owner_guild_id = ''
         this.data = {};
         this.verifying = true;
         this.uuids = [];
@@ -12,14 +15,20 @@ export class Hypixel {
         this.mojang_ping = this.hypixel_ping = 0;
         this.max_rate_limit = this.remain_rate_limit = this.reset_rate_limit = 300;
     }
+    setSelfIgn = async (ign) => {
+        this.self_ign = ign;
+        this.self_uuid = await this.getPlayerUuid(ign);
+        this.owner_guild_id = await this.getGuildData(this.self_uuid).then(json => json?.guild?._id ?? '')
+    }
     getPlayerUuid = async (name) => {//null when the player not found
         if (this.uuids[name] != null) return this.uuids[name];
         let start = new Date().getTime();
-        let a = await fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
+        let a = await window.go.main.App.Fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
+            .then(res => JSON.parse(res))
             .then(res => {
                 if (res.status == 404) return null;
                 if (res.status == 429) return 429;
-                return res.json();
+                return JSON.parse(res.body);
             });
         this.mojang_ping = new Date().getTime() - start;
         if (a == null) return null;
@@ -33,13 +42,14 @@ export class Hypixel {
     getPlayerData = async (uuid) => {
         try {
             let start = new Date().getTime();
-            let res = await fetch(`https://api.hypixel.net/player?key=${this.apiKey}&uuid=${uuid}`)
+            let res = await window.go.main.App.Fetch(`https://api.hypixel.net/player?key=${this.apiKey}&uuid=${uuid}`)
+                .then(res => JSON.parse(res))
                 .catch(err => { throw err })
                 .then(res => {
-                    this.max_rate_limit = +res.headers.get('ratelimit-limit');
-                    this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
-                    this.reset_rate_limit = +res.headers.get('ratelimit-reset');
-                    if (res.ok) return res.json();
+                    // this.max_rate_limit = +res.headers.get('ratelimit-limit');
+                    // this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
+                    // this.reset_rate_limit = +res.headers.get('ratelimit-reset');
+                    if (res.status < 400) return JSON.parse(res.body);
                     throw res.status;
                 });
             this.hypixel_ping = new Date().getTime() - start;
@@ -52,13 +62,14 @@ export class Hypixel {
     getGuildData = async (uuid) => {
         try {
             let start = new Date().getTime();
-            let res = await fetch(`https://api.hypixel.net/guild?key=${this.apiKey}&player=${uuid}`)
+            let res = await window.go.main.App.Fetch(`https://api.hypixel.net/guild?key=${this.apiKey}&player=${uuid}`)
+                .then(res => JSON.parse(res))
                 .catch(err => { throw err })
                 .then(res => {
-                    this.max_rate_limit = +res.headers.get('ratelimit-limit');
-                    this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
-                    this.reset_rate_limit = +res.headers.get('ratelimit-reset');
-                    if (res.ok) return res.json();
+                    // this.max_rate_limit = +res.headers.get('ratelimit-limit');
+                    // this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
+                    // this.reset_rate_limit = +res.headers.get('ratelimit-reset');
+                    if (res.status < 400) return JSON.parse(res.body);
                     throw res.status;
                 });
             this.hypixel_ping = new Date().getTime() - start;
@@ -242,9 +253,10 @@ export class Hypixel {
     }
     getGuild = (name) => getGuild[config.get('lang')](this.data[name].guild, this.uuids[name]);
     getStatus = async (name) => {
-        const b = await fetch(`https://api.hypixel.net/status?key=${this.apiKey}&uuid=${await this.getPlayerUuid(name)}`)
+        const b = await window.go.main.App.Fetch(`https://api.hypixel.net/status?key=${this.apiKey}&uuid=${await this.getPlayerUuid(name)}`)
+            .then(res => JSON.parse(res))
             .catch(reason => console.log(reason))
-            .then(res => res.json());
+            .then(res => JSON.parse(res.body));
         if (!b.success)
             return document.getElementById('status').innerHTML = b.cause;
         return getStatus[config.get('lang')](b.session);
@@ -390,7 +402,7 @@ const getThePitLevel = (pitProfile) => {
 const socialMediaList = ['DISCORD', 'HYPIXEL', 'TWITCH', 'TWITTER', 'YOUTUBE'];
 const getSocialMedia = (platform, api) => api?.socialMedia?.links[platform] ?? null;
 
-let gameTitle, subGame;
+export let gameTitle, subGame;
 
 export const readDisplayData = async (config) => {
     let path = `${await window.go.main.App.GetPath('this')}json\\title_mode_${config.get('lang')}.json`;

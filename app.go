@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
 	"syscall"
-	"time"
 
-	"github.com/lxn/win"
-
+	"github.com/go-toast/toast"
 	"github.com/hpcloud/tail"
+	"github.com/lxn/win"
 )
 
 // App struct
@@ -59,28 +59,26 @@ var newLogs []string
 
 func (a *App) MonitorFile(path string) string {
 	newLogs = []string{}
-	//设置seek 到文末
 	seek := &tail.SeekInfo{}
 	seek.Offset = 0
 	seek.Whence = io.SeekEnd
-	// 设置配置
 	config := tail.Config{}
 	config.Follow = true
 	config.Location = seek
 	config.ReOpen = true
 	config.MustExist = false
-	config.RateLimiter.LeakInterval = time.Millisecond * 100
+	config.Poll = true
 	t, err := tail.TailFile(path, config)
 	if err != nil {
 		return err.Error()
 	}
-	fmt.Println(111)
 	go func() {
-		for line := range t.Lines {
+		for {
+			line := <-t.Lines
 			fmt.Println(line.Text)
+			newLogs = append(newLogs, line.Text)
 		}
 	}()
-	fmt.Println(222)
 	return ""
 }
 
@@ -127,4 +125,38 @@ func (a *App) GetPath(t string) string {
 		fmt.Print(err)
 	}
 	return u.HomeDir + "\\"
+}
+
+func (a *App) ShowNotification(title string, content string, actions []toast.Action) string {
+	notification := toast.Notification{
+		AppID:   "Starburst Overlay",
+		Title:   title,
+		Message: content,
+		Icon:    a.GetPath("this") + "icon.ico",
+		Actions: actions,
+	}
+	err := notification.Push()
+	if err != nil {
+		return err.Error()
+	}
+	return ""
+}
+
+type FetchResult struct {
+	body   string
+	status int
+}
+
+func (a *App) Fetch(url string) (string, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return "{\"body\":\"\",\"status\":0}", err
+	}
+	defer response.Body.Close()
+	bytes, _ := io.ReadAll(response.Body)
+	return "{\"body\":\"" + ToJsonString(strings.ReplaceAll(string(bytes), "\n", "")) + "\",\"status\":" + fmt.Sprint(response.StatusCode) + "}", err
+}
+
+func ToJsonString(s string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(s, "/", "\\/"), "\"", "\\\"")
 }

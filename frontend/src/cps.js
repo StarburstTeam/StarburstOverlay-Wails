@@ -1,12 +1,12 @@
 let testTime = 10 * 1000, testing = false, tested = false;
 let leftCnt = 0, rightCnt = 0;
 
-const setTestTime = (time) => {
+export const setTestTime = (time, i18n) => {
     testTime = time * 1000;
     document.getElementById('cpsTestTime').innerText = `${i18n.now().cps_test_time}${time}${i18n.now().cps_second}`;
 }
 
-const onTestClick = (button) => {
+export const onTestClick = (button, i18n) => {
     if (tested) return;
     if (!testing) {
         leftCnt = rightCnt = 0;
@@ -33,7 +33,7 @@ const onTestClick = (button) => {
     if (button == 2) rightCnt++;
 }
 
-const resetTest = () => {
+export const resetTest = (i18n) => {
     tested = false;
     document.getElementById('cpsTestResult').innerHTML = '';
     document.getElementById('testCpsButton').innerHTML = i18n.now().cps_click_to_start;

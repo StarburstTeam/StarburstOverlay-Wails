@@ -1,9 +1,10 @@
 import { Tail } from './tail'
 import { Config } from './config'
 import { I18n } from './i18n'
-import { Hypixel, readDisplayData } from './hypixel'
+import { Hypixel, readDisplayData, subGame } from './hypixel'
 import { loadBlacklist } from './blacklist'
-import { formatNameString } from './util'
+import { setTestTime, onTestClick, resetTest } from './cps'
+import { formatNameString, formatColor } from './util'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
@@ -37,6 +38,31 @@ window.onload = async () => {
     document.getElementById('settings').onclick = _ => switchPage('settingPage');
     document.getElementById('info').onclick = _ => switchPage('infoPage');
 
+    document.getElementById('lang').onclick = _ => {
+        config.set('lang', document.getElementById('lang').value);
+        window.location.href = './index.html';
+    }
+    document.getElementById('setting_change_log_path').onclick = _ => selectLogFile();
+    document.getElementById('apiKey').onclick = _ => {
+        hypixel.apiKey = document.getElementById('apiKey').value;
+        config.set('apiKey', hypixel.apiKey);
+    }
+    document.getElementById('ign').onchange = _ => {
+        config.set('ign', document.getElementById('ign').value);
+        hypixel.setSelfIgn(config.get('ign'));
+    }
+    document.getElementById('infotype').onclick = _ => changeDiv();
+    document.getElementById('subGame').onclick = _ => setSubGame();
+    document.getElementById('autoShrink').onclick = _ => config.set('autoShrink', document.getElementById('autoShrink').checked);
+    document.getElementById('notification').onclick = _ => config.set('notification', document.getElementById('notification').checked);
+
+    document.getElementById('cps_1s').onclick = _ => setTestTime(1, i18n);
+    document.getElementById('cps_5s').onclick = _ => setTestTime(5, i18n);
+    document.getElementById('cps_10s').onclick = _ => setTestTime(10, i18n);
+    document.getElementById('cps_20s').onclick = _ => setTestTime(20, i18n);
+    document.getElementById('testCpsButton').onmousedown = event => onTestClick(event.button, i18n);
+    document.getElementById('cps_reset').onclick = _ => resetTest(i18n);
+
     document.getElementById('show').onclick = _ => resize(null, true);
     document.getElementById('minimize').onclick = _ => window.runtime.WindowMinimise();
     document.getElementById('quit').onclick = _ => { onClose(); window.runtime.Quit(); }
@@ -48,6 +74,7 @@ window.onload = async () => {
     nowSub = config.get('lastSub');
     document.getElementById('autoShrink').checked = config.get('autoShrink');
     document.getElementById('apiKey').value = config.get('apiKey');
+    document.getElementById('ign').value = config.get('ign');
     document.getElementById('notification').checked = config.get('notification');
     document.getElementById('lang').value = config.get('lang');
     document.getElementById('infotype').innerHTML = i18n.getMainModeHTML();
@@ -55,7 +82,6 @@ window.onload = async () => {
     await readDisplayData(config);
     changeCategory();
     loadSubGame(nowSub);
-    findUpdate();
     document.getElementById('infotype').value = nowType;
     document.getElementById('subGame').value = nowSub;
 
@@ -134,10 +160,7 @@ window.onload = async () => {
         } else if (msg.indexOf(i18n.now().chat_game_start_1_second) != -1 && msg.indexOf(':') == -1) {
             resize(false);
             if (config.get('notification'))
-                new Notification({
-                    title: i18n.now().notification_start_title,
-                    body: i18n.now().notification_start_body
-                }).show();
+                window.go.main.App.ShowNotification(i18n.now().notification_start_title, i18n.now().notification_start_body, []);
         } else if (msg.indexOf(i18n.now().chat_game_start_0_second) != -1 && msg.indexOf(':') == -1) resize(false);
         else if (msg.indexOf('https://rewards.hypixel.net/claim-reward/') != -1) {
             let url = `https://rewards.hypixel.net/claim-reward/${msg.split('https://rewards.hypixel.net/claim-reward/')[1].split('\\n')[0]}`;
@@ -156,25 +179,6 @@ const initTagInfo = () => {
     let info = hypixel.getTag();
     for (let { text, color, detail } of info.data)
         document.getElementById("TagInfo").innerHTML += `&nbsp;<span style="color:${color}">${text}</span>&nbsp;${formatNameString(detail)}<br>`;
-}
-
-const findUpdate = async () => {
-    try {
-        let remote = await fetch('https://raw.githubusercontent.com/IAFEnvoy/StarburstOverlay/master/package.json').then(res => res.json()).catch(err => console.log(err));
-        let local = require('../package.json');
-        console.log(remote, local);
-        if (remote == null) return;
-        if (compairVersion(remote.version, local.version) == -1) {
-            new Notification({
-                title: i18n.now().notification_update_available_title,
-                body: i18n.now().notification_update_available_body
-            }).show();
-            document.getElementById('update').hidden = false;
-        }
-    }
-    catch (err) {
-        console.log(err);
-    }
 }
 
 const changeCategory = () => {
@@ -202,7 +206,8 @@ const switchPage = (page) => {
 }
 
 const openSearchPage = () => {
-    ipcRenderer.send('open-search-page');
+    alert('This is currently unavailable in Wails version.');
+    // ipcRenderer.send('open-search-page');
 }
 
 let nowShow = true;
@@ -250,7 +255,7 @@ const updateHTML = async () => {
     let main = document.getElementById('main');
     resetError(false);
 
-    if (config.get('logPath') == '' || !hasLog)
+    if (config.get('logPath') == '')
         return pushError(`${i18n.now().error_log_not_found}<br>${i18n.now().info_set_log_path}`, false);
     if (config.get('apiKey') == '')
         return pushError(`${i18n.now().error_api_key_not_found}<br>${i18n.now().info_api_new}`, false);
@@ -416,7 +421,7 @@ const onClose = async () => {
 }
 
 let stable_message = false;
-const pushNetworkError = (code) => {
+export const pushNetworkError = (code) => {
     if (code == 403) pushError(`${i18n.now().error_api_key_invalid}<br>${i18n.now().info_api_new}`, true);
     else if (code == 429) pushError(`${i18n.now().error_api_limit_exceeded}`, true);
 }

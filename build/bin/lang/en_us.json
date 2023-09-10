@@ -1,0 +1,121 @@
+{
+    "id": "en_us",
+    "name": "English",
+    "values": {
+        "chat_online": "ONLINE: ",
+        "chat_player_join": " has joined",
+        "chat_player_quit": " has quit",
+        "chat_sending": "Sending you",
+        "chat_join_lobby": " the lobby!",
+        "chat_final_kill": "FINAL KILL",
+        "chat_disconnect": "disconnected",
+        "chat_reconnect": "reconnected",
+        "chat_game_start_1_second": "The game starts in 1 second!",
+        "chat_game_start_0_second": "The game starts in 0 second!",
+        "notification_start_title": "Game Started!",
+        "notification_start_body": "Your Hypixel game has started!",
+        "notification_update_available_title": "Update Available!",
+        "notification_update_available_body": "Click the update button to get.",
+        "error_api_key_not_found": "API Key Not Found",
+        "error_api_key_invalid": "Invalid API Key",
+        "error_api_error": "API Error",
+        "error_log_not_found": "Log File Not Found",
+        "error_player_not_found": "Player Not Found!",
+        "error_player_missing": "Missing players",
+        "info_set_log_path": "Set Log Path In Settings",
+        "info_api_new": "Type /api new To Get",
+        "info_who": "Please type /who",
+        "hud_current_mode": "Current Mode : ",
+        "hud_select_log_file_title": "Select latest.log file",
+        "hud_select_log_file_button_label": "Select log file",
+        "hud_main_level": "Lvl",
+        "hud_main_players": "Players",
+        "hud_main_tag": "Tag",
+        "cps_second": "s",
+        "cps_test_time": "Test Time : ",
+        "cps_time_last": "Time Last : ",
+        "cps_left_click": "Left Click : ",
+        "cps_right_click": "Right Click : ",
+        "cps_result_left": "Your left button clicking speed is ",
+        "cps_result_right": "Your right button clicking speed is ",
+        "cps_click_to_start": "Click to Start",
+        "language":"Language : ",
+        "guild":"Guild : ",
+        "error_api_limit_exceeded":"API Limit Exceeded! Please wait for reset.",
+        "tag_developer":"The Developer",
+        "tag_alt":"Potential Alt",
+        "tag_sniper":"Potential Sniper",
+        "tag_party":"Potential Party",
+        "tag_guild":"Same Guild",
+        "tag_mention_guild":"Mention Guild"
+    },
+    "page": {
+        "basic":"Basic Settings",
+        "extra": "Advanced Settings",
+        "api_key":"Hypixel API Key :",
+        "copy_api_key":"Copy",
+        "copied_api_key":"Copied!",
+        "playerNameLabel": "Player Name :",
+        "searchButton": "Go!",
+        "downloadSkin": "Download Skin",
+        "setting_game_type": "Game Type :",
+        "setting_log_path": "Log Path :",
+        "setting_change_log_path": "Set Log Path",
+        "setting_auto_shrink": "Auto Shrink :",
+        "setting_notification": "Game Start Notification :",
+        "language": "Hypixel In-Game Language:",
+        "cpsTestTime": "Test Time : 10s",
+        "testCpsButton": "Click to Start",
+        "cps_reset": "Reset",
+        "cps_1s": "1s",
+        "cps_5s": "5s",
+        "cps_10s": "10s",
+        "cps_20s": "20s",
+        "color_key": "&nbsp; Stats Color Key :",
+        "bad": "BAD",
+        "ok": "OK",
+        "good": "GOOD",
+        "epic": "EPIC",
+        "legend": "LEGEND",
+        "god": "GOD",
+        "link_github": "&nbsp; If you meet any problems or ideas, tell me on my Github! (Click here to open)",
+        "language_tooltip":"The language you set in game",
+        "log_tooltip":"The log path your current client used.<br>Click for more info.",
+        "api_tooltip":"Get the API key from developer.hypixel.net",
+        "game_mode_tooltip":"The game you currently playing"
+    },
+    "mode": [
+        {
+            "id": "bw",
+            "name": "Bed War"
+        },
+        {
+            "id": "sw",
+            "name": "Sky War"
+        },
+        {
+            "id": "mm",
+            "name": "Murder Mystery"
+        },
+        {
+            "id": "duel",
+            "name": "Duel"
+        },
+        {
+            "id": "uhc",
+            "name": "UHC Champion"
+        },
+        {
+            "id": "mw",
+            "name": "Mega Wall"
+        },
+        {
+            "id": "ww",
+            "name": "Wool War"
+        },
+        {
+            "id": "bsg",
+            "name": "Blitz Survive Game"
+        }
+    ]
+}
