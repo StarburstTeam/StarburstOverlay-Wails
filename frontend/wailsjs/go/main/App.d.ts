@@ -6,11 +6,11 @@ export function Fetch(arg1:string):Promise<string>;
 
 export function GetDirectoryFiles(arg1:string):Promise<Array<string>>;
 
-export function GetLines():Promise<Array<string>>;
-
 export function GetPath(arg1:string):Promise<string>;
 
 export function MonitorFile(arg1:string):Promise<string>;
+
+export function OpenFileDialog(arg1:string,arg2:string):Promise<string>;
 
 export function ReadJsonString(arg1:string):Promise<string>;
 

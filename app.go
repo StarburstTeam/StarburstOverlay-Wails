@@ -15,6 +15,7 @@ import (
 	"github.com/go-toast/toast"
 	"github.com/hpcloud/tail"
 	"github.com/lxn/win"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -31,6 +32,7 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
 	var val *uint16
 	var err error
 	val, err = syscall.UTF16PtrFromString("Starburst Overlay")
@@ -55,10 +57,7 @@ func (a *App) WriteJsonString(path string, context string) error {
 	return os.WriteFile(path, []byte(context), 777)
 }
 
-var newLogs []string
-
 func (a *App) MonitorFile(path string) string {
-	newLogs = []string{}
 	seek := &tail.SeekInfo{}
 	seek.Offset = 0
 	seek.Whence = io.SeekEnd
@@ -76,17 +75,10 @@ func (a *App) MonitorFile(path string) string {
 		for {
 			line := <-t.Lines
 			fmt.Println(line.Text)
-			newLogs = append(newLogs, line.Text)
+			runtime.EventsEmit(a.ctx, "tail_line", line.Text)
 		}
 	}()
 	return ""
-}
-
-func (a *App) GetLines() []string {
-	var nowLogs []string
-	nowLogs = newLogs
-	newLogs = []string{}
-	return nowLogs
 }
 
 func (a *App) GetDirectoryFiles(path string) []string {
@@ -159,4 +151,17 @@ func (a *App) Fetch(url string) (string, error) {
 
 func ToJsonString(s string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(s, "/", "\\/"), "\"", "\\\"")
+}
+
+func (a *App) OpenFileDialog(title string, filePattern string) (string, error) {
+	options := runtime.OpenDialogOptions{}
+	options.Title = title
+	options.Filters = []runtime.FileFilter{
+		{
+			DisplayName: filePattern,
+			Pattern:     filePattern,
+		},
+	}
+	path, err := runtime.OpenFileDialog(a.ctx, options)
+	return path, err
 }

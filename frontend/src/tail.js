@@ -3,10 +3,6 @@ export class Tail {
         this.path = path;
         this.callback = callback;
         console.log(window.go.main.App.MonitorFile(path));
-        setInterval(async _ => {
-            let data = await window.go.main.App.GetLines();
-            if (data.length > 0)
-                data.forEach(x => this.callback(x));
-        }, 100);
+        window.runtime.EventsOn('tail_line', this.callback)
     }
 }

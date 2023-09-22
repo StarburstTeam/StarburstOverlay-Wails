@@ -162,11 +162,11 @@ window.onload = async () => {
             if (config.get('notification'))
                 window.go.main.App.ShowNotification(i18n.now().notification_start_title, i18n.now().notification_start_body, []);
         } else if (msg.indexOf(i18n.now().chat_game_start_0_second) != -1 && msg.indexOf(':') == -1) resize(false);
-        else if (msg.indexOf('https://rewards.hypixel.net/claim-reward/') != -1) {
-            let url = `https://rewards.hypixel.net/claim-reward/${msg.split('https://rewards.hypixel.net/claim-reward/')[1].split('\\n')[0]}`;
-            console.log(url);
-            window.open(url, 'Claim Rewards', 'width=800,height=600,frame=true,transparent=false,alwaysOnTop=true');
-        }
+        // else if (msg.indexOf('https://rewards.hypixel.net/claim-reward/') != -1) {
+        //     let url = `https://rewards.hypixel.net/claim-reward/${msg.split('https://rewards.hypixel.net/claim-reward/')[1].split('\\n')[0]}`;
+        //     console.log(url);
+        //     window.open(url, 'Claim Rewards', 'width=800,height=600,frame=true,transparent=false,alwaysOnTop=true');
+        // }
         if (changed) {
             console.log(players);
             updateHTML();
@@ -383,17 +383,8 @@ const pickDataAndSort = () => {
     return dataList;
 }
 
-const selectLogFile = () => {
-    let temppath = dialog.showOpenDialogSync(currentWindow, {
-        title: i18n.now().hud_select_log_file_title,
-        defaultPath: app.getPath('home').split('\\').join('/'),
-        buttonLabel: i18n.now().hud_select_log_file_button_label,
-        filters: [{
-            name: 'Latest log',
-            extensions: ['log']
-        }]
-    });
-    if (temppath == null) return;
+const selectLogFile = async() => {
+    let temppath = await window.go.main.App.OpenFileDialog(i18n.now().hud_select_log_file_title, 'latest.log');
     config.set('logPath', temppath[0].split('\\').join('/'));
     window.runtime.WindowReload();
 }

@@ -19,11 +19,12 @@ Unicode true
 ####
 ## The following information is taken from the ProjectInfo file, but they can be overwritten here. 
 ####
-## !define INFO_PROJECTNAME    "MyProject" # Default "{{.Name}}"
-## !define INFO_COMPANYNAME    "MyCompany" # Default "{{.Info.CompanyName}}"
-## !define INFO_PRODUCTNAME    "MyProduct" # Default "{{.Info.ProductName}}"
-## !define INFO_PRODUCTVERSION "1.0.0"     # Default "{{.Info.ProductVersion}}"
-## !define INFO_COPYRIGHT      "Copyright" # Default "{{.Info.Copyright}}"
+!define INFO_PROJECTNAME    "Starburst Overlay" # Default "{{.Name}}"
+!define INFO_COMPANYNAME    "IAFEnvoy" # Default "{{.Info.CompanyName}}"
+!define INFO_PRODUCTNAME    "Starburst Overlay" # Default "{{.Info.ProductName}}"
+!define INFO_PRODUCTVERSION "3.0.0"     # Default "{{.Info.ProductVersion}}"
+!define INFO_COPYRIGHT      "Open Source Under GPL-3.0 License" # Default "{{.Info.Copyright}}"
+SetCompressor lzma
 ###
 ## !define PRODUCT_EXECUTABLE  "Application.exe"      # Default "${INFO_PROJECTNAME}.exe"
 ## !define UNINST_KEY_NAME     "UninstKeyInRegistry"  # Default "${INFO_COMPANYNAME}${INFO_PRODUCTNAME}"
@@ -61,29 +62,54 @@ VIAddVersionKey "ProductName"     "${INFO_PRODUCTNAME}"
 
 !insertmacro MUI_UNPAGE_INSTFILES # Uinstalling page
 
-!insertmacro MUI_LANGUAGE "English" # Set the Language of the installer
+!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "SimpChinese" # Set the Language of the installer
 
 ## The following two statements can be used to sign the installer and the uninstaller. The path to the binaries are provided in %1
 #!uninstfinalize 'signtool --file "%1"'
 #!finalize 'signtool --file "%1"'
 
 Name "${INFO_PRODUCTNAME}"
-OutFile "..\..\bin\${INFO_PROJECTNAME}-${ARCH}-installer.exe" # Name of the installer's file.
-InstallDir "$PROGRAMFILES64\${INFO_COMPANYNAME}\${INFO_PRODUCTNAME}" # Default installing folder ($PROGRAMFILES is Program Files folder).
+OutFile "..\..\installer\${INFO_PROJECTNAME}-${INFO_PRODUCTVERSION}-${ARCH}-installer.exe" # Name of the installer's file.
+InstallDir "$PROGRAMFILES64\${INFO_PRODUCTNAME}" # Default installing folder ($PROGRAMFILES is Program Files folder).
 ShowInstDetails show # This will always show the installation details.
 
 Function .onInit
-   !insertmacro wails.checkArchitecture
+    !insertmacro wails.checkArchitecture
+   
+    # 检查已安装版本
+    ReadRegStr $version HKLM $UNINST_KEY "DisplayVersion"
+    IfErrors done
+    
+    MessageBox MessageBox MB_YESNOCANCEL|MB_ICONQUESTION \
+        "Version ${version} has been installed, do you want to override?" \
+        /SD IDYES \
+        IDYES uninstall \
+        IDNO done
+    uninstall:
+        CreateDirectory C:\WINDOWS\temp
+        CopyFiles $UNINSTALL_PROG  C:\WINDOWS\temp\uninst.exe
+
+        ExecWait '"C:\WINDOWS\temp\uninst.exe" /S _?=C:\WINDOWS\temp' $0
+        DetailPrint "uninst.exe returned $0"
+        Delete "C:\WINDOWS\temp\uninst.exe"
+    done:
 FunctionEnd
 
 Section
     !insertmacro wails.setShellContext
 
+    #Install WebView2
     !insertmacro wails.webview2runtime
 
     SetOutPath $INSTDIR
-    
+
+    #Install Executable
     !insertmacro wails.files
+
+    #Install Extra Files
+    File /r "..\..\bin\json"
+    File /r "..\..\bin\lang"
 
     CreateShortcut "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
     CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
@@ -94,7 +120,7 @@ SectionEnd
 Section "uninstall" 
     !insertmacro wails.setShellContext
 
-    RMDir /r "$AppData\${PRODUCT_EXECUTABLE}" # Remove the WebView2 DataPath
+    ;RMDir /r "$AppData\${PRODUCT_EXECUTABLE}" # Remove the WebView2 DataPath
 
     RMDir /r $INSTDIR
 
