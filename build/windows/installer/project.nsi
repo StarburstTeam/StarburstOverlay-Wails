@@ -58,6 +58,10 @@ VIAddVersionKey "ProductName"     "${INFO_PRODUCTNAME}"
 # !insertmacro MUI_PAGE_LICENSE "resources\eula.txt" # Adds a EULA page to the installer
 !insertmacro MUI_PAGE_DIRECTORY # In which folder install page.
 !insertmacro MUI_PAGE_INSTFILES # Installing page.
+
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_FUNCTION "RunProgram"
+
 !insertmacro MUI_PAGE_FINISH # Finished installation page.
 
 !insertmacro MUI_UNPAGE_INSTFILES # Uinstalling page
@@ -76,24 +80,6 @@ ShowInstDetails show # This will always show the installation details.
 
 Function .onInit
     !insertmacro wails.checkArchitecture
-   
-    # 检查已安装版本
-    ReadRegStr $version HKLM $UNINST_KEY "DisplayVersion"
-    IfErrors done
-    
-    MessageBox MessageBox MB_YESNOCANCEL|MB_ICONQUESTION \
-        "Version ${version} has been installed, do you want to override?" \
-        /SD IDYES \
-        IDYES uninstall \
-        IDNO done
-    uninstall:
-        CreateDirectory C:\WINDOWS\temp
-        CopyFiles $UNINSTALL_PROG  C:\WINDOWS\temp\uninst.exe
-
-        ExecWait '"C:\WINDOWS\temp\uninst.exe" /S _?=C:\WINDOWS\temp' $0
-        DetailPrint "uninst.exe returned $0"
-        Delete "C:\WINDOWS\temp\uninst.exe"
-    done:
 FunctionEnd
 
 Section
@@ -110,6 +96,7 @@ Section
     #Install Extra Files
     File /r "..\..\bin\json"
     File /r "..\..\bin\lang"
+    File "..\..\bin\icon.ico"
 
     CreateShortcut "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
     CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
@@ -129,3 +116,7 @@ Section "uninstall"
 
     !insertmacro wails.deleteUninstaller
 SectionEnd
+
+Function RunProgram
+    ExecShell "" "$INSTDIR\${PRODUCT_EXECUTABLE}"
+FunctionEnd

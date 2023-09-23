@@ -385,7 +385,7 @@ const pickDataAndSort = () => {
 
 const selectLogFile = async() => {
     let temppath = await window.go.main.App.OpenFileDialog(i18n.now().hud_select_log_file_title, 'latest.log');
-    config.set('logPath', temppath[0].split('\\').join('/'));
+    config.set('logPath', temppath.split('\\').join('/'));
     window.runtime.WindowReload();
 }
 

@@ -2,3 +2,4 @@ node_modules
 frontend/dist
 *.zip
 tmp
+installer

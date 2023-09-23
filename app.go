@@ -163,5 +163,6 @@ func (a *App) OpenFileDialog(title string, filePattern string) (string, error) {
 		},
 	}
 	path, err := runtime.OpenFileDialog(a.ctx, options)
+	fmt.Println(path)
 	return path, err
 }
