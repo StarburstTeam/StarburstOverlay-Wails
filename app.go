@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strings"
@@ -165,4 +166,15 @@ func (a *App) OpenFileDialog(title string, filePattern string) (string, error) {
 	path, err := runtime.OpenFileDialog(a.ctx, options)
 	fmt.Println(path)
 	return path, err
+}
+
+func (a *App) OpenExternal(url string) error {
+	var cmd string
+	var args []string
+
+	cmd = "cmd"
+	args = []string{"/c", "start"}
+
+	args = append(args, url)
+	return exec.Command(cmd, args...).Start()
 }

@@ -178,7 +178,7 @@ window.onload = async () => {
 const initTagInfo = () => {
     let info = hypixel.getTag();
     for (let { text, color, detail } of info.data)
-        document.getElementById("TagInfo").innerHTML += `&nbsp;<span style="color:${color}">${text}</span>&nbsp;${formatNameString(detail)}<br>`;
+        document.getElementById("TagInfo").innerHTML += `&nbsp;&nbsp;<span style="color:${color}">${text}</span>&nbsp;${formatNameString(detail)}<br>`;
 }
 
 const changeCategory = () => {
@@ -319,7 +319,7 @@ const search = async (name) => {
             let icon = document.createElement('img');
             icon.src = 'img/icons/' + cur.toLowerCase() + '.png';
             icon.style = 'width:70px;height:70px;';
-            icon.addEventListener('click', () => shell.openExternal(link));
+            icon.addEventListener('click', () => window.go.main.App.OpenExternal(link));
             prev.appendChild(icon);
         }
         return prev;

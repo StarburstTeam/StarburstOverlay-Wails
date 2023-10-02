@@ -18,6 +18,10 @@ export function MonitorFile(arg1) {
   return window['go']['main']['App']['MonitorFile'](arg1);
 }
 
+export function OpenExternal(arg1) {
+  return window['go']['main']['App']['OpenExternal'](arg1);
+}
+
 export function OpenFileDialog(arg1, arg2) {
   return window['go']['main']['App']['OpenFileDialog'](arg1, arg2);
 }

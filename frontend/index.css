@@ -1,6 +1,6 @@
 @font-face {
     font-family: "consolas";
-    public: url("consolas.ttf");
+    src: url("consolas.ttf");
 }
 
 html,
@@ -28,7 +28,7 @@ body {
 
 #quit {
     background: transparent;
-    background-image: url("./public/img/quit1.png");
+    background-image: url("./img/quit1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -40,7 +40,7 @@ body {
 
 #quit:hover {
     background: transparent;
-    background-image: url("./public/img/quit2.png");
+    background-image: url("./img/quit2.png");
     background-size: cover;
     cursor: pointer;
     transition: all 0.2s ease-out;
@@ -48,7 +48,7 @@ body {
 
 #minimize {
     background: transparent;
-    background-image: url("./public/img/min1.png");
+    background-image: url("./img/min1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -60,7 +60,7 @@ body {
 
 #minimize:hover {
     background: transparent;
-    background-image: url("./public/img/min2.png");
+    background-image: url("./img/min2.png");
     background-size: cover;
     cursor: pointer;
     transition: all 0.2s ease-out;
@@ -68,7 +68,7 @@ body {
 
 #show {
     background: transparent;
-    background-image: url("./public/img/show1.png");
+    background-image: url("./img/show1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -80,7 +80,7 @@ body {
 
 #show:hover {
     background: transparent;
-    background-image: url("./public/img/show2.png");
+    background-image: url("./img/show2.png");
     background-size: cover;
     cursor: pointer;
     transition: all 0.2s ease-out;
@@ -88,7 +88,7 @@ body {
 
 .settings {
     background: transparent;
-    background-image: url("./public/img/settings1.png");
+    background-image: url("./img/settings1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -101,7 +101,7 @@ body {
 .settings_stay,
 .settings:hover {
     background: transparent;
-    background-image: url("./public/img/settings2.png");
+    background-image: url("./img/settings2.png");
     background-size: cover;
     cursor: pointer;
     -webkit-app-region: no-drag;
@@ -114,7 +114,7 @@ body {
 
 .cps {
     background: transparent;
-    background-image: url("./public/img/cps1.png");
+    background-image: url("./img/cps1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -127,7 +127,7 @@ body {
 .cps_stay,
 .cps:hover {
     background: transparent;
-    background-image: url("./public/img/cps2.png");
+    background-image: url("./img/cps2.png");
     background-size: cover;
     cursor: pointer;
     -webkit-app-region: no-drag;
@@ -140,7 +140,7 @@ body {
 
 .search {
     background: transparent;
-    background-image: url("./public/img/search1.png");
+    background-image: url("./img/search1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -153,7 +153,7 @@ body {
 .search_stay,
 .search:hover {
     background: transparent;
-    background-image: url("./public/img/search2.png");
+    background-image: url("./img/search2.png");
     background-size: cover;
     cursor: pointer;
     -webkit-app-region: no-drag;
@@ -166,7 +166,7 @@ body {
 
 .info {
     background: transparent;
-    background-image: url("./public/img/info1.png");
+    background-image: url("./img/info1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -179,7 +179,7 @@ body {
 .info_stay,
 .info:hover {
     background: transparent;
-    background-image: url("./public/img/info2.png");
+    background-image: url("./img/info2.png");
     background-size: cover;
     cursor: pointer;
     -webkit-app-region: no-drag;
@@ -192,7 +192,7 @@ body {
 
 .update {
     background: transparent;
-    background-image: url("./public/img/update1.png");
+    background-image: url("./img/update1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -204,7 +204,7 @@ body {
 
 .update:hover {
     background: transparent;
-    background-image: url("./public/img/update2.png");
+    background-image: url("./img/update2.png");
     background-size: cover;
     cursor: pointer;
     -webkit-app-region: no-drag;

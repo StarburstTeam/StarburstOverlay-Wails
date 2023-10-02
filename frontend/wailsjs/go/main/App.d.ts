@@ -10,6 +10,8 @@ export function GetPath(arg1:string):Promise<string>;
 
 export function MonitorFile(arg1:string):Promise<string>;
 
+export function OpenExternal(arg1:string):Promise<void>;
+
 export function OpenFileDialog(arg1:string,arg2:string):Promise<string>;
 
 export function ReadJsonString(arg1:string):Promise<string>;

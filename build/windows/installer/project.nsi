@@ -23,7 +23,7 @@ Unicode true
 !define INFO_COMPANYNAME    "IAFEnvoy" # Default "{{.Info.CompanyName}}"
 !define INFO_PRODUCTNAME    "Starburst Overlay" # Default "{{.Info.ProductName}}"
 !define INFO_PRODUCTVERSION "3.0.0"     # Default "{{.Info.ProductVersion}}"
-!define INFO_COPYRIGHT      "Open Source Under GPL-3.0 License" # Default "{{.Info.Copyright}}"
+!define INFO_COPYRIGHT      "IAFEnvoy @ GPL-3.0" # Default "{{.Info.Copyright}}"
 SetCompressor lzma
 ###
 ## !define PRODUCT_EXECUTABLE  "Application.exe"      # Default "${INFO_PROJECTNAME}.exe"
