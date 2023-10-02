@@ -383,7 +383,7 @@ const pickDataAndSort = () => {
     return dataList;
 }
 
-const selectLogFile = async() => {
+const selectLogFile = async () => {
     let temppath = await window.go.main.App.OpenFileDialog(i18n.now().hud_select_log_file_title, 'latest.log');
     config.set('logPath', temppath.split('\\').join('/'));
     window.runtime.WindowReload();
@@ -395,6 +395,8 @@ const clearMainPanel = () => {
     <th id="sort_1" style="width:60px" onclick="setSortContext(1)">${i18n.now().hud_main_level}</th>
     <th id="sort_2" style="width:400px" onclick="setSortContext(2)">${i18n.now().hud_main_players}</th>
     ${category.reduce((p, c, i) => p + `<th id="sort_${i + 3}" style="width:100px" onclick="setSortContext(${i + 3})">${c}</th>`, '')}</tr>`;
+    for (let i = 1; i <= 8; i++)
+        document.getElementById('sort_' + i).onclick = _ => setSortContext(i);
 }
 
 window.onresize = async () => {
