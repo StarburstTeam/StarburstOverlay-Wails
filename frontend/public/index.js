@@ -93,7 +93,7 @@ window.onload = async () => {
         let s = data.indexOf('[CHAT]');
         if (s == -1) return;//not a chat log
         let changed = false;
-        let msg = data.substring(s + 7).replace(' [C]', '');
+        let msg = data.substring(s + 7).replace(' [C]', '').replace('\r', '');
         console.log(msg);
         if (msg.indexOf(i18n.now().chat_online) != -1 && msg.indexOf(',') != -1) {//the result of /who command
             if (inLobby) return;
@@ -292,6 +292,8 @@ const updateHTML = async () => {
         pushError(`${i18n.now().error_player_missing}<br>${i18n.now().info_who}`, false);
     if (column >= 1 && column <= 8)
         document.getElementById(`sort_${column}`).innerHTML += isUp ? '↑' : '↓';
+    for (let i = 1; i <= 8; i++)
+        document.getElementById('sort_' + i).onclick = _ => setSortContext(i);
 }
 
 let searchPlayerName = null;
@@ -391,12 +393,10 @@ const selectLogFile = async () => {
 
 const clearMainPanel = () => {
     let main = document.getElementById('main'), category = hypixel.getTitle(nowType);
-    main.innerHTML = `<tr><th id="sort_8" style="width:60px" onclick="setSortContext(8)">${i18n.now().hud_main_tag}</th>
-    <th id="sort_1" style="width:60px" onclick="setSortContext(1)">${i18n.now().hud_main_level}</th>
-    <th id="sort_2" style="width:400px" onclick="setSortContext(2)">${i18n.now().hud_main_players}</th>
-    ${category.reduce((p, c, i) => p + `<th id="sort_${i + 3}" style="width:100px" onclick="setSortContext(${i + 3})">${c}</th>`, '')}</tr>`;
-    for (let i = 1; i <= 8; i++)
-        document.getElementById('sort_' + i).onclick = _ => setSortContext(i);
+    main.innerHTML = `<tr><th id="sort_8" style="width:60px">${i18n.now().hud_main_tag}</th>
+    <th id="sort_1" style="width:60px">${i18n.now().hud_main_level}</th>
+    <th id="sort_2" style="width:400px">${i18n.now().hud_main_players}</th>
+    ${category.reduce((p, c, i) => p + `<th id="sort_${i + 3}" style="width:100px">${c}</th>`, '')}</tr>`;
 }
 
 window.onresize = async () => {
@@ -441,3 +441,5 @@ const copyApiKey = () => {
     document.getElementById('copy_api_key').innerHTML = i18n.data[i18n.current].page.copied_api_key;
     setTimeout(_ => document.getElementById('copy_api_key').innerHTML = i18n.data[i18n.current].page.copy_api_key, 1000)
 }
+
+window.addManual = addManual

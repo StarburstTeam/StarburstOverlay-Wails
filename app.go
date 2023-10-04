@@ -58,6 +58,8 @@ func (a *App) WriteJsonString(path string, context string) error {
 	return os.WriteFile(path, []byte(context), 777)
 }
 
+var lastLine string
+
 func (a *App) MonitorFile(path string) string {
 	seek := &tail.SeekInfo{}
 	seek.Offset = 0
@@ -75,6 +77,10 @@ func (a *App) MonitorFile(path string) string {
 	go func() {
 		for {
 			line := <-t.Lines
+			if lastLine == line.Text {
+				continue
+			}
+			lastLine = line.Text
 			fmt.Println(line.Text)
 			runtime.EventsEmit(a.ctx, "tail_line", line.Text)
 		}
