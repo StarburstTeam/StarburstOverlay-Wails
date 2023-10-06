@@ -5,6 +5,8 @@ export class Config {
     }
     load = async () => {
         this.path = await window.go.main.App.GetPath('roaming') + this.path;
+        if (!await window.go.main.App.FileExists(this.path)) 
+            window.go.main.App.WriteJsonString(this.path, JSON.stringify({}))
         let data = await window.go.main.App.ReadJsonString(this.path);
         try {
             this.config = JSON.parse(data);
@@ -23,7 +25,7 @@ export class Config {
         } else return this.config[name];
     }
     set = (name, val) => {
-        console.log(name,val);
+        console.log(name, val);
         this.config[name] = val;
         window.go.main.App.WriteJsonString(this.path, JSON.stringify(this.config))
     }

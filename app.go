@@ -58,6 +58,17 @@ func (a *App) WriteJsonString(path string, context string) error {
 	return os.WriteFile(path, []byte(context), 777)
 }
 
+func (a *App) FileExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
+}
+
 var lastLine string
 
 func (a *App) MonitorFile(path string) string {

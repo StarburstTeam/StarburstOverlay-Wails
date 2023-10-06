@@ -4,6 +4,8 @@ import {toast} from '../models';
 
 export function Fetch(arg1:string):Promise<string>;
 
+export function FileExists(arg1:string):Promise<boolean>;
+
 export function GetDirectoryFiles(arg1:string):Promise<Array<string>>;
 
 export function GetPath(arg1:string):Promise<string>;

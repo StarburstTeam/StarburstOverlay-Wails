@@ -6,6 +6,10 @@ export function Fetch(arg1) {
   return window['go']['main']['App']['Fetch'](arg1);
 }
 
+export function FileExists(arg1) {
+  return window['go']['main']['App']['FileExists'](arg1);
+}
+
 export function GetDirectoryFiles(arg1) {
   return window['go']['main']['App']['GetDirectoryFiles'](arg1);
 }
