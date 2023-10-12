@@ -55,6 +55,10 @@ func (a *App) ReadJsonString(path string) (string, error) {
 }
 
 func (a *App) WriteJsonString(path string, context string) error {
+	r, _ := a.FileExists(path)
+	if !r {
+		os.Create(path)
+	}
 	return os.WriteFile(path, []byte(context), 777)
 }
 
@@ -118,7 +122,7 @@ func (a *App) GetPath(t string) string {
 			if err != nil {
 				fmt.Print(err)
 			}
-			return u.HomeDir + "\\AppData\\Roaming\\Starburst Overlay\\"
+			return u.HomeDir + "\\AppData\\Roaming\\Starburst Overlay.exe\\"
 		}
 	case "this":
 		{

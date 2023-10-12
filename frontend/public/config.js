@@ -4,11 +4,9 @@ export class Config {
         this.defaultValue = defaultValue == null ? {} : defaultValue
     }
     load = async () => {
-        this.path = await window.go.main.App.GetPath('roaming') + this.path;
-        if (!await window.go.main.App.FileExists(this.path)) 
-            window.go.main.App.WriteJsonString(this.path, JSON.stringify({}))
-        let data = await window.go.main.App.ReadJsonString(this.path);
         try {
+            this.path = await window.go.main.App.GetPath('roaming') + this.path;
+            let data = await window.go.main.App.ReadJsonString(this.path).catch(err => { throw err });
             this.config = JSON.parse(data);
         } catch (err) {
             console.log(err)
