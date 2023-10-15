@@ -18,6 +18,8 @@ export function OpenExternal(arg1:string):Promise<void>;
 
 export function OpenFileDialog(arg1:string,arg2:string):Promise<string>;
 
+export function OpenSelf(arg1:string):Promise<void>;
+
 export function ReadJsonString(arg1:string):Promise<string>;
 
 export function ShowNotification(arg1:string,arg2:string,arg3:Array<toast.Action>):Promise<string>;

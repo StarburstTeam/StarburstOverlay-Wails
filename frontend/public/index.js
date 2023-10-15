@@ -206,8 +206,8 @@ const switchPage = (page) => {
 }
 
 const openSearchPage = () => {
-    alert('This is currently unavailable in Wails version.');
-    // ipcRenderer.send('open-search-page');
+    // alert('This is currently unavailable in Wails version.');
+    window.go.main.App.OpenSelf('search');
 }
 
 let nowShow = true;

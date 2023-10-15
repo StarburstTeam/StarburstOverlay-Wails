@@ -34,6 +34,10 @@ export function OpenFileDialog(arg1, arg2) {
   return window['go']['main']['App']['OpenFileDialog'](arg1, arg2);
 }
 
+export function OpenSelf(arg1) {
+  return window['go']['main']['App']['OpenSelf'](arg1);
+}
+
 export function ReadJsonString(arg1) {
   return window['go']['main']['App']['ReadJsonString'](arg1);
 }

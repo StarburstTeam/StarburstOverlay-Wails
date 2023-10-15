@@ -51,6 +51,16 @@ func (a *App) GetMode() string {
 	return a.mode
 }
 
+func (a *App) OpenSelf(mode string) error {
+	path, _ := os.Executable()
+
+	var cmd string
+	var args []string
+	cmd = path
+	args = []string{"-mode", mode}
+	return exec.Command(cmd, args...).Start()
+}
+
 func (a *App) ReadJsonString(path string) (string, error) {
 	bytes, err := os.ReadFile(path)
 	if err != nil {
