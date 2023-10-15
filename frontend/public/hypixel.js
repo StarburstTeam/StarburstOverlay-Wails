@@ -1,6 +1,7 @@
 import { blacklist } from "./blacklist";
 import { sleep, formatColor, formatColorFromString, toDefault, formatNameString } from "./util";
 import { pushNetworkError } from "./index"
+import { getGuild, getStatus } from "./i18n/hypixel_i18n";
 
 //this file contains api to hypixel
 export class Hypixel {
@@ -251,26 +252,15 @@ export class Hypixel {
         let player = this.data[name].player;
         return [formatNameString(player.userLanguage ?? 'ENGLISH'), formatColor(this.getGuildName(name))];
     }
-    getGuild = (name) => getGuild[config.get('lang')](this.data[name].guild, this.uuids[name]);
-    getStatus = async (name) => {
+    getGuild = (lang, name) => getGuild[lang](this.data[name].guild, this.uuids[name]);
+    getStatus = async (lang, name) => {
         const b = await window.go.main.App.Fetch(`https://api.hypixel.net/status?key=${this.apiKey}&uuid=${await this.getPlayerUuid(name)}`)
             .then(res => JSON.parse(res))
             .catch(reason => console.log(reason))
             .then(res => JSON.parse(res.body));
         if (!b.success)
             return document.getElementById('status').innerHTML = b.cause;
-        return getStatus[config.get('lang')](b.session);
-    }
-}
-
-const getGuildLevel = (exp) => {
-    let guildLevelTables = [100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000, 2500000, 2500000, 2500000, 2500000, 3000000];
-    let level = 0;
-    for (let i = 0; ; i++) {
-        let need = i >= guildLevelTables.length ? guildLevelTables[guildLevelTables.length - 1] : guildLevelTables[i];
-        exp -= need;
-        if (exp < 0) return level + 1 + exp / need;
-        else level++;
+        return getStatus[lang](b.session);
     }
 }
 
@@ -381,13 +371,13 @@ const formatBwLevel = (lvl) => {
 }
 
 //searcher
-const modeList = ['bw', 'sw', 'mm', 'duel', 'uhc', 'mw', 'bb', 'pit', 'bsg', 'arcade'];
+export const modeList = ['bw', 'sw', 'mm', 'duel', 'uhc', 'mw', 'bb', 'pit', 'bsg', 'arcade'];
 
 // 在等级 10 * k 至 10 * (k + 1) 时, 升一级所需经验
 const expReqPhased = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
 // 在精通 k 时, 升一级所需经验需要乘以的倍数
 const presMultipl = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 45, 50, 75, 100, 101, 101, 101, 101, 101];
-const getThePitLevel = (pitProfile) => {
+export const getThePitLevel = (pitProfile) => {
     level = 0;
     let xp = pitProfile.xp ?? 0;
     for (let i = 0; i < presMultipl.length; i++)
@@ -399,8 +389,8 @@ const getThePitLevel = (pitProfile) => {
             }
 }
 
-const socialMediaList = ['DISCORD', 'HYPIXEL', 'TWITCH', 'TWITTER', 'YOUTUBE'];
-const getSocialMedia = (platform, api) => api?.socialMedia?.links[platform] ?? null;
+export const socialMediaList = ['DISCORD', 'HYPIXEL', 'TWITCH', 'TWITTER', 'YOUTUBE'];
+export const getSocialMedia = (platform, api) => api?.socialMedia?.links[platform] ?? null;
 
 export let gameTitle, subGame;
 

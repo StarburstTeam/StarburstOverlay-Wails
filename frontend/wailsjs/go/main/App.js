@@ -14,6 +14,10 @@ export function GetDirectoryFiles(arg1) {
   return window['go']['main']['App']['GetDirectoryFiles'](arg1);
 }
 
+export function GetMode() {
+  return window['go']['main']['App']['GetMode']();
+}
+
 export function GetPath(arg1) {
   return window['go']['main']['App']['GetPath'](arg1);
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"flag"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -9,12 +10,16 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
+var mode = flag.String("mode", "normal", "The running mode of the overlay.\nAcceptable: normal, search, setup")
+
 //go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
+	flag.Parse()
+
 	// Create an instance of the app structure
-	app := NewApp()
+	app := NewApp(*mode)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -32,7 +37,7 @@ func main() {
 		AlwaysOnTop:      true,
 		Bind: []interface{}{
 			app,
-		}, 
+		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,
 			WindowIsTranslucent:               false,

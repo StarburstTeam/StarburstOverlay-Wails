@@ -1,9 +1,10 @@
-const { remote, shell, BrowserWindow } = require('electron');
-const { app } = remote;
-const fs = require('fs');
+import { Config } from './config'
+import { I18n } from './i18n'
+import { Hypixel, modeList, socialMediaList, getSocialMedia } from './hypixel'
+import { formatColor } from './util'
+import { getData } from './i18n/hypixel_i18n'
 
-const currentWindow = remote.getCurrentWindow();
-const config = new Config(`${app.getPath('userData')}/config.json`, {
+const config = new Config(`config.json`, {
     lang: 'en_us',
     logPath: '',
     apiKey: '',
@@ -16,20 +17,29 @@ const config = new Config(`${app.getPath('userData')}/config.json`, {
     x: 40,
     y: 20
 });
-const i18n = new I18n(config.get('lang'));
-let hypixel = null;
+let i18n = null, hypixel = null;
 
 window.onload = async () => {
+    await config.load();
+    i18n = new I18n(config.get('lang'));
+    await i18n.load();
     i18n.initPage();
     hypixel = new Hypixel(config.get('apiKey'));
 
+    document.getElementById('minimize').onclick = _ => window.runtime.WindowMinimise();
+    document.getElementById('quit').onclick = _ => window.runtime.Quit();
+
+    document.getElementById('searchButton').onclick = _ => search();
+    document.getElementById('downloadSkin').onclick = _ => downloadSkin();
+
     //init search page
-    let games = await fetch(`json/games_${config.get('lang')}.json`).then(res => res.json());
+    let path = await window.go.main.App.GetPath('this') + `json/games_${config.get('lang')}.json`;
+    let games = JSON.parse(await window.go.main.App.ReadJsonString(path));
     modeList.reduce((p, c) => {
         let root = document.createElement('div');
         root.className = 'dataStyle';
         root.id = c;
-        root.addEventListener('click', (e) => showDetail(e.path[1].id));
+        root.onclick = _ => showDetail(c);
         let name = document.createElement('div');
         name.style.fontSize = '20px';
         name.innerHTML = games.find(it => it.short == c).name;
@@ -52,14 +62,16 @@ const search = async (name) => {
     if (i == null) return document.getElementById('playerName').innerText = hypixel.verified ? i18n.now().error_api_error : i18n.now().error_api_key_invalid;
     if (i == false) return document.getElementById('playerName').innerText = i18n.now().error_player_not_found;
 
+    window.hypixel = hypixel
+    console.log(name)
     let data = hypixel.data[name];
     if (data.success == false) return console.log(data);
 
     document.getElementById('playerName').innerHTML = formatColor(hypixel.formatName(name));
     document.getElementById('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(name)}?overlay`;
     document.getElementById('networkinfo').innerHTML = getData[config.get('lang')]['ov'](data.player);
-    document.getElementById('guild').innerHTML = hypixel.getGuild(name);
-    document.getElementById('status').innerHTML = await hypixel.getStatus(name);
+    document.getElementById('guild').innerHTML = hypixel.getGuild(config.get('lang'), name);
+    document.getElementById('status').innerHTML = await hypixel.getStatus(config.get('lang'), name);
     document.getElementById('socialMedia').innerHTML = '';
     socialMediaList.reduce((prev, cur) => {
         let link = getSocialMedia(cur, data.player);

@@ -21,12 +21,15 @@ import (
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx  context.Context
+	mode string
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(mode string) *App {
+	return &App{
+		mode: mode,
+	}
 }
 
 // startup is called when the app starts. The context is saved
@@ -42,7 +45,10 @@ func (a *App) startup(ctx context.Context) {
 	}
 	hwnd := win.FindWindow(nil, val)
 	win.SetWindowLong(hwnd, win.GWL_EXSTYLE, win.GetWindowLong(hwnd, win.GWL_EXSTYLE)|win.WS_EX_LAYERED)
+}
 
+func (a *App) GetMode() string {
+	return a.mode
 }
 
 func (a *App) ReadJsonString(path string) (string, error) {

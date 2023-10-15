@@ -8,6 +8,8 @@ export function FileExists(arg1:string):Promise<boolean>;
 
 export function GetDirectoryFiles(arg1:string):Promise<Array<string>>;
 
+export function GetMode():Promise<string>;
+
 export function GetPath(arg1:string):Promise<string>;
 
 export function MonitorFile(arg1:string):Promise<string>;
