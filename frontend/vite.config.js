@@ -3,7 +3,7 @@ export default {
     build: {
         rollupOptions: {
             input: [
-                'index.html', 'main.html', 'search.html'
+                'index.html', 'main.html', 'search.html', "setup.html"
             ]
         }
     }

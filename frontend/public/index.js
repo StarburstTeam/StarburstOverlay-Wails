@@ -8,6 +8,7 @@ import { formatNameString, formatColor } from './util'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
+    ign: '',
     logPath: '',
     apiKey: '',
     lastType: 'bw',
@@ -23,7 +24,10 @@ let i18n = null;
 let players = [], party = [], hypixel = null, nowType = null, nowSub = null, inLobby = false, missingPlayer = false, numplayers = 0, hasLog = false;
 
 window.onload = async () => {
-    await config.load();
+    if (!await config.load()) {
+        window.go.main.App.OpenSelf('setup');
+        window.runtime.Quit();
+    }
     i18n = new I18n(config.get('lang'));
     await i18n.load();
     window.runtime.WindowSetSize(config.get('width'), config.get('height'));
@@ -32,6 +36,11 @@ window.onload = async () => {
     window.screenY = window.screenTop = config.get('y');
     i18n.initPage();
     loadBlacklist();
+
+    document.getElementById('settings').className = 'settings';
+    document.getElementById('search').className = 'search';
+    document.getElementById('info').className = 'info';
+    document.getElementById('cps').className = 'cps';
 
     document.getElementById('cps').onclick = _ => switchPage('cpsPage');
     document.getElementById('search').onclick = _ => openSearchPage();

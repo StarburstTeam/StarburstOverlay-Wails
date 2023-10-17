@@ -52,9 +52,9 @@
     "page": {
         "basic": "基础设置",
         "extra": "高级设置",
-        "api_key":"Hypixel API Key :",
-        "copy_api_key":"复制",
-        "copied_api_key":"已复制",
+        "api_key": "Hypixel API Key :",
+        "copy_api_key": "复制",
+        "copied_api_key": "已复制",
         "playerNameLabel": "玩家名：",
         "searchButton": "搜索",
         "downloadSkin": "下载皮肤",
@@ -79,10 +79,11 @@
         "legend": "犇",
         "god": "神",
         "link_github": "&nbsp; 如果遇到任何问题，可以在Github上发起Issue（点此打开）",
-        "language_tooltip":"你在游戏内设置的语言",
-        "log_tooltip":"The log path your current client used.<br>Click for more info.",
-        "api_tooltip":"Get the API key from developer.hypixel.net",
-        "game_mode_tooltip":"你当前正在玩的游戏模式"
+        "language_tooltip": "你在游戏内设置的语言",
+        "log_tooltip": "The log path your current client used.<br>Click for more info.",
+        "api_tooltip": "从developer.hypixel.net获取",
+        "game_mode_tooltip": "你当前正在玩的游戏模式",
+        "done": "完成"
     },
     "mode": [
         {

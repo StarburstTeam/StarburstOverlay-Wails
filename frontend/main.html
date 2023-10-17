@@ -42,13 +42,13 @@
             </svg>
             <button id="update" class="update" hidden
                 onclick="window.go.main.App.OpenExternal('https://github.com/IAFEnvoy/StarburstOverlay/releases')"></button>
-            <button id="cps" class="cps" onclick="switchPage('cpsPage')"></button>
-            <button id="search" class="search" onclick="openSearchPage()"></button>
-            <button id="settings" class="settings" onclick="switchPage('settingPage')"></button>
-            <button id="info" class="info" onclick="switchPage('infoPage')"></button>
-            <button id="show" onclick="resize(null, true)"></button>
-            <button id="minimize" onclick="currentWindow.minimize()"></button>
-            <button id="quit" onclick="onClose();currentWindow.close();"></button>
+            <button id="cps"></button>
+            <button id="search"></button>
+            <button id="settings"></button>
+            <button id="info"></button>
+            <button id="show"></button>
+            <button id="minimize"></button>
+            <button id="quit"></button>
         </div>
     </div>
     <div style="height:20px">
@@ -78,7 +78,7 @@
         <div class="tooltip">
             <div class="setting_subtitle" style="float:left" id="api_key">Hypixel API Key</div>
             <input id="apiKey" type="password" style="width: 380px;" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-            <button class="setting_button" id="copy_api_key" onclick="copyApiKey()">Copy</button>
+            <button class="setting_button" id="copy_api_key">Copy</button>
             <br>
             <span class="tooltiptext" id="api_tooltip">Get the API key from <a>developer.hypixel.net</a></span>
         </div><br>

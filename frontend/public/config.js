@@ -11,8 +11,10 @@ export class Config {
         } catch (err) {
             console.log(err)
             this.config = this.defaultValue;
+            return false;
         }
         console.log(this.config);
+        return true;
     }
     get = (name) => {
         if (this.config[name] == null) {
@@ -22,9 +24,11 @@ export class Config {
             } else return null;
         } else return this.config[name];
     }
-    set = (name, val) => {
+    set = async (name, val) => {
         console.log(name, val);
         this.config[name] = val;
-        window.go.main.App.WriteJsonString(this.path, JSON.stringify(this.config))
+        await window.go.main.App.WriteJsonString(this.path, JSON.stringify(this.config))
     }
 }
+
+window.Config = Config;
