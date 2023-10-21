@@ -1,4 +1,5 @@
 import { Config } from "./config";
+import { $ } from "./global";
 import { I18n } from "./i18n";
 
 const config = new Config(`config.json`, {
@@ -23,17 +24,17 @@ window.onload = async () => {
     await i18n.load();
     i18n.initPage();
 
-    document.getElementById('setting_change_log_path').onclick = _ => selectLogFile();
-    document.getElementById('lang').onclick = async _ => {
-        i18n.set(document.getElementById('lang').value);
+    $.id('setting_change_log_path').onclick = _ => selectLogFile();
+    $.id('lang').onclick = async _ => {
+        i18n.set($.id('lang').value);
         await i18n.load();
         i18n.initPage();
     }
-    document.getElementById('done').onclick = async _ => {
-        await config.set('lang', document.getElementById('lang').value);
-        await config.set('ign', document.getElementById('ign').value);
-        await config.set('logPath', document.getElementById('logpath').value);
-        await config.set('apiKey', document.getElementById('apikey').value);
+    $.id('done').onclick = async _ => {
+        await config.set('lang', $.id('lang').value);
+        await config.set('ign', $.id('ign').value);
+        await config.set('logPath', $.id('logpath').value);
+        await config.set('apiKey', $.id('apikey').value);
 
         window.go.main.App.OpenSelf('normal');
         window.runtime.Quit();
@@ -42,5 +43,5 @@ window.onload = async () => {
 
 const selectLogFile = async () => {
     let temppath = await window.go.main.App.OpenFileDialog(i18n.now().hud_select_log_file_title, 'latest.log');
-    document.getElementById('logpath').value = temppath.split('\\').join('/');
+    $.id('logpath').value = temppath.split('\\').join('/');
 }

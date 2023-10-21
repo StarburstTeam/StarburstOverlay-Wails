@@ -45,9 +45,11 @@
         "tag_developer": "开发者",
         "tag_alt": "可能为小号",
         "tag_sniper": "可能是狙击",
-        "tag_party": "可能为组队",
-        "tag_guild": "同公会",
-        "tag_mention_guild": "关注的公会"
+        "tag_potential_party": "可能为组队",
+        "tag_same_guild": "同公会",
+        "tag_mention_guild": "关注的公会",
+        "tag_blacklist_player": "黑名单玩家",
+        "tag_blacklist_guild": "黑名单公会"
     },
     "page": {
         "basic": "基础设置",

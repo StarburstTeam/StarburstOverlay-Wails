@@ -1,9 +1,11 @@
+import { $ } from "./global";
+
 let testTime = 10 * 1000, testing = false, tested = false;
 let leftCnt = 0, rightCnt = 0;
 
 export const setTestTime = (time, i18n) => {
     testTime = time * 1000;
-    document.getElementById('cpsTestTime').innerText = `${i18n.now().cps_test_time}${time}${i18n.now().cps_second}`;
+    $.id('cpsTestTime').innerText = `${i18n.now().cps_test_time}${time}${i18n.now().cps_second}`;
 }
 
 export const onTestClick = (button, i18n) => {
@@ -17,8 +19,8 @@ export const onTestClick = (button, i18n) => {
                 clearInterval(t);
                 testing = false;
                 tested = true;
-                document.getElementById('testCpsButton').innerHTML = `${i18n.now().cps_time_last}${testLast / 1000}${i18n.now().cps_second}<br>${i18n.now().cps_left_click}${leftCnt} , ${i18n.now().cps_right_click}${rightCnt}`;
-                let result = document.getElementById('cpsTestResult');
+                $.id('testCpsButton').innerHTML = `${i18n.now().cps_time_last}${testLast / 1000}${i18n.now().cps_second}<br>${i18n.now().cps_left_click}${leftCnt} , ${i18n.now().cps_right_click}${rightCnt}`;
+                let result = $.id('cpsTestResult');
                 if (rightCnt == 0)
                     return result.innerHTML = `${i18n.now().cps_result_left}<b>${leftCnt * 1000 / testTime}</b>CPS`;
                 if (leftCnt == 0)
@@ -26,7 +28,7 @@ export const onTestClick = (button, i18n) => {
                 return result.innerHTML = `${i18n.now().cps_result_left}<b>${leftCnt * 1000 / testTime}</b>CPS , ${i18n.now().cps_result_right}<b>${rightCnt * 1000 / testTime}</b>CPS`;
             }
             testLast -= 100;
-            document.getElementById('testCpsButton').innerHTML = `${i18n.now().cps_time_last}${testLast / 1000}${i18n.now().cps_second}<br>${i18n.now().cps_left_click}${leftCnt} , ${i18n.now().cps_right_click}${rightCnt}`;
+            $.id('testCpsButton').innerHTML = `${i18n.now().cps_time_last}${testLast / 1000}${i18n.now().cps_second}<br>${i18n.now().cps_left_click}${leftCnt} , ${i18n.now().cps_right_click}${rightCnt}`;
         }, 100);
     }
     if (button == 0) leftCnt++;
@@ -35,6 +37,6 @@ export const onTestClick = (button, i18n) => {
 
 export const resetTest = (i18n) => {
     tested = false;
-    document.getElementById('cpsTestResult').innerHTML = '';
-    document.getElementById('testCpsButton').innerHTML = i18n.now().cps_click_to_start;
+    $.id('cpsTestResult').innerHTML = '';
+    $.id('testCpsButton').innerHTML = i18n.now().cps_click_to_start;
 }

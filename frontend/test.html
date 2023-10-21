@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Starburst Overlay</title>
+</head>
+
+<body>
+    <style>
+        @keyframes loading_icon {
+            from {
+                left: 20%;
+            }
+
+            to {
+                left: 80%;
+            }
+        }
+
+        #test {
+            position: relative;
+            animation: loading_icon 0.5s ease-in-out infinite alternate;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+        }
+    </style>
+    <div id="test"></div>
+</body>

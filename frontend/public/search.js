@@ -3,6 +3,7 @@ import { I18n } from './i18n'
 import { Hypixel, modeList, socialMediaList, getSocialMedia } from './hypixel'
 import { formatColor } from './util'
 import { getData } from './i18n/hypixel_i18n'
+import { $ } from './global'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
@@ -26,11 +27,11 @@ window.onload = async () => {
     i18n.initPage();
     hypixel = new Hypixel(config.get('apiKey'));
 
-    document.getElementById('minimize').onclick = _ => window.runtime.WindowMinimise();
-    document.getElementById('quit').onclick = _ => window.runtime.Quit();
+    $.id('minimize').onclick = _ => window.runtime.WindowMinimise();
+    $.id('quit').onclick = _ => window.runtime.Quit();
 
-    document.getElementById('searchButton').onclick = _ => search();
-    document.getElementById('downloadSkin').onclick = _ => downloadSkin();
+    $.id('searchButton').onclick = _ => search();
+    $.id('downloadSkin').onclick = _ => downloadSkin();
 
     //init search page
     let path = await window.go.main.App.GetPath('this') + `json/games_${config.get('lang')}.json`;
@@ -49,30 +50,30 @@ window.onload = async () => {
         root.appendChild(detail);
         p.appendChild(root);
         return p;
-    }, document.getElementById('details'));
+    }, $.id('details'));
 }
 
 let searchPlayerName = null;
 const search = async (name) => {
-    if (document.getElementById('searchPage').hidden) switchPage('searchPage');
-    if (name == null) name = document.getElementById('playername').value;
-    else document.getElementById('playername').value = name;
+    if ($.id('searchPage').hidden) switchPage('searchPage');
+    if (name == null) name = $.id('playername').value;
+    else $.id('playername').value = name;
     searchPlayerName = name;
     let i = await hypixel.download(name);
-    if (i == null) return document.getElementById('playerName').innerText = hypixel.verified ? i18n.now().error_api_error : i18n.now().error_api_key_invalid;
-    if (i == false) return document.getElementById('playerName').innerText = i18n.now().error_player_not_found;
+    if (i == null) return $.id('playerName').innerText = hypixel.verified ? i18n.now().error_api_error : i18n.now().error_api_key_invalid;
+    if (i == false) return $.id('playerName').innerText = i18n.now().error_player_not_found;
 
     window.hypixel = hypixel
     console.log(name)
     let data = hypixel.data[name];
     if (data.success == false) return console.log(data);
 
-    document.getElementById('playerName').innerHTML = formatColor(hypixel.formatName(name));
-    document.getElementById('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(name)}?overlay`;
-    document.getElementById('networkinfo').innerHTML = getData[config.get('lang')]['ov'](data.player);
-    document.getElementById('guild').innerHTML = hypixel.getGuild(config.get('lang'), name);
-    document.getElementById('status').innerHTML = await hypixel.getStatus(config.get('lang'), name);
-    document.getElementById('socialMedia').innerHTML = '';
+    $.id('playerName').innerHTML = formatColor(hypixel.formatName(name));
+    $.id('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(name)}?overlay`;
+    $.id('networkinfo').innerHTML = getData[config.get('lang')]['ov'](data.player);
+    $.id('guild').innerHTML = hypixel.getGuild(config.get('lang'), name);
+    $.id('status').innerHTML = await hypixel.getStatus(config.get('lang'), name);
+    $.id('socialMedia').innerHTML = '';
     socialMediaList.reduce((prev, cur) => {
         let link = getSocialMedia(cur, data.player);
         if (link != null) {
@@ -83,19 +84,19 @@ const search = async (name) => {
             prev.appendChild(icon);
         }
         return prev;
-    }, document.getElementById('socialMedia'));
+    }, $.id('socialMedia'));
 }
 
 let latestmode = '';
 const showDetail = (mode) => {
     if (searchPlayerName == null || mode == 'details') return;
     if (latestmode == mode) {
-        document.getElementById(latestmode + 'detail').innerHTML = '';
+        $.id(latestmode + 'detail').innerHTML = '';
         latestmode = '';
     } else {
         if (latestmode != '')
-            document.getElementById(latestmode + 'detail').innerHTML = '';
-        document.getElementById(mode + 'detail').innerHTML = getData[config.get('lang')][mode](hypixel.data[searchPlayerName].player);
+            $.id(latestmode + 'detail').innerHTML = '';
+        $.id(mode + 'detail').innerHTML = getData[config.get('lang')][mode](hypixel.data[searchPlayerName].player);
         latestmode = mode;
     }
 }

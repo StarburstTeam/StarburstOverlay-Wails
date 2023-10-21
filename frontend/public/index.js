@@ -4,7 +4,8 @@ import { I18n } from './i18n'
 import { Hypixel, readDisplayData, subGame } from './hypixel'
 import { loadBlacklist } from './blacklist'
 import { setTestTime, onTestClick, resetTest } from './cps'
-import { formatNameString, formatColor } from './util'
+import { formatColor } from './util'
+import { $ } from './global'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
@@ -37,62 +38,63 @@ window.onload = async () => {
     i18n.initPage();
     loadBlacklist();
 
-    document.getElementById('settings').className = 'settings';
-    document.getElementById('search').className = 'search';
-    document.getElementById('info').className = 'info';
-    document.getElementById('cps').className = 'cps';
+    $.id('settings').className = 'settings';
+    $.id('search').className = 'search';
+    $.id('info').className = 'info';
+    $.id('cps').className = 'cps';
 
-    document.getElementById('cps').onclick = _ => switchPage('cpsPage');
-    document.getElementById('search').onclick = _ => openSearchPage();
-    document.getElementById('settings').onclick = _ => switchPage('settingPage');
-    document.getElementById('info').onclick = _ => switchPage('infoPage');
+    $.id('cps').onclick = _ => switchPage('cpsPage');
+    $.id('search').onclick = _ => openSearchPage();
+    $.id('settings').onclick = _ => switchPage('settingPage');
+    $.id('info').onclick = _ => switchPage('infoPage');
 
-    document.getElementById('lang').onclick = _ => {
-        config.set('lang', document.getElementById('lang').value);
-        window.location.href = './index.html';
+    $.id('lang').onclick = async _ => {
+        config.set('lang', $.id('lang').value);
+        i18n = new I18n(config.get('lang'));
+        await i18n.load();
+        i18n.initPage();
     }
-    document.getElementById('setting_change_log_path').onclick = _ => selectLogFile();
-    document.getElementById('apiKey').onclick = _ => {
-        hypixel.apiKey = document.getElementById('apiKey').value;
+    $.id('setting_change_log_path').onclick = _ => selectLogFile();
+    $.id('apiKey').onclick = _ => {
+        hypixel.apiKey = $.id('apiKey').value;
         config.set('apiKey', hypixel.apiKey);
     }
-    document.getElementById('ign').onchange = _ => {
-        config.set('ign', document.getElementById('ign').value);
+    $.id('ign').onchange = _ => {
+        config.set('ign', $.id('ign').value);
         hypixel.setSelfIgn(config.get('ign'));
     }
-    document.getElementById('infotype').onclick = _ => changeDiv();
-    document.getElementById('subGame').onclick = _ => setSubGame();
-    document.getElementById('autoShrink').onclick = _ => config.set('autoShrink', document.getElementById('autoShrink').checked);
-    document.getElementById('notification').onclick = _ => config.set('notification', document.getElementById('notification').checked);
+    $.id('infotype').onclick = _ => changeDiv();
+    $.id('subGame').onclick = _ => setSubGame();
+    $.id('autoShrink').onclick = _ => config.set('autoShrink', $.id('autoShrink').checked);
+    $.id('notification').onclick = _ => config.set('notification', $.id('notification').checked);
 
-    document.getElementById('cps_1s').onclick = _ => setTestTime(1, i18n);
-    document.getElementById('cps_5s').onclick = _ => setTestTime(5, i18n);
-    document.getElementById('cps_10s').onclick = _ => setTestTime(10, i18n);
-    document.getElementById('cps_20s').onclick = _ => setTestTime(20, i18n);
-    document.getElementById('testCpsButton').onmousedown = event => onTestClick(event.button, i18n);
-    document.getElementById('cps_reset').onclick = _ => resetTest(i18n);
+    $.id('cps_1s').onclick = _ => setTestTime(1, i18n);
+    $.id('cps_5s').onclick = _ => setTestTime(5, i18n);
+    $.id('cps_10s').onclick = _ => setTestTime(10, i18n);
+    $.id('cps_20s').onclick = _ => setTestTime(20, i18n);
+    $.id('testCpsButton').onmousedown = event => onTestClick(event.button, i18n);
+    $.id('cps_reset').onclick = _ => resetTest(i18n);
 
-    document.getElementById('show').onclick = _ => resize(null, true);
-    document.getElementById('minimize').onclick = _ => window.runtime.WindowMinimise();
-    document.getElementById('quit').onclick = _ => { onClose(); window.runtime.Quit(); }
+    $.id('show').onclick = _ => resize(null, true);
+    $.id('minimize').onclick = _ => window.runtime.WindowMinimise();
+    $.id('quit').onclick = _ => { onClose(); window.runtime.Quit(); }
 
     hypixel = new Hypixel(config.get('apiKey'));
     updateHTML();
-    initTagInfo();
     nowType = config.get('lastType');
     nowSub = config.get('lastSub');
-    document.getElementById('autoShrink').checked = config.get('autoShrink');
-    document.getElementById('apiKey').value = config.get('apiKey');
-    document.getElementById('ign').value = config.get('ign');
-    document.getElementById('notification').checked = config.get('notification');
-    document.getElementById('lang').value = config.get('lang');
-    document.getElementById('infotype').innerHTML = i18n.getMainModeHTML();
+    $.id('autoShrink').checked = config.get('autoShrink');
+    $.id('apiKey').value = config.get('apiKey');
+    $.id('ign').value = config.get('ign');
+    $.id('notification').checked = config.get('notification');
+    $.id('lang').value = config.get('lang');
+    $.id('infotype').innerHTML = i18n.getMainModeHTML();
     pushError();
     await readDisplayData(config);
     changeCategory();
     loadSubGame(nowSub);
-    document.getElementById('infotype').value = nowType;
-    document.getElementById('subGame').value = nowSub;
+    $.id('infotype').value = nowType;
+    $.id('subGame').value = nowSub;
 
     setInterval(() => updateApiRate(), 1000);
 
@@ -184,12 +186,6 @@ window.onload = async () => {
     updateHTML();
 }
 
-const initTagInfo = () => {
-    let info = hypixel.getTag();
-    for (let { text, color, detail } of info.data)
-        document.getElementById("TagInfo").innerHTML += `&nbsp;&nbsp;<span style="color:${color}">${text}</span>&nbsp;${formatNameString(detail)}<br>`;
-}
-
 const changeCategory = () => {
     clearMainPanel();
     config.set('lastType', nowType);
@@ -197,21 +193,21 @@ const changeCategory = () => {
 
 let lastPage = 'main';
 const switchPage = (page) => {
-    if (document.getElementById('main').hidden && lastPage == page) page = 'main';
+    if ($.id('main').hidden && lastPage == page) page = 'main';
     lastPage = page;
-    document.getElementById('main').style.display = '';
-    document.getElementById('main').hidden = true;
-    document.getElementById('settingPage').hidden = true;
-    document.getElementById('infoPage').hidden = true;
-    document.getElementById('cpsPage').hidden = true;
-    document.getElementById('settings').className = 'settings';
-    document.getElementById('info').className = 'info';
-    document.getElementById('cps').className = 'cps';
-    document.getElementById(page).hidden = false;
-    if (page == 'main') document.getElementById('main').style.display = 'inline-block';
-    if (page == 'settingPage') document.getElementById('settings').className = 'settings_stay';
-    if (page == 'infoPage') document.getElementById('info').className = 'info_stay';
-    if (page == 'cpsPage') document.getElementById('cps').className = 'cps_stay';
+    $.id('main').style.display = '';
+    $.id('main').hidden = true;
+    $.id('settingPage').hidden = true;
+    $.id('infoPage').hidden = true;
+    $.id('cpsPage').hidden = true;
+    $.id('settings').className = 'settings';
+    $.id('info').className = 'info';
+    $.id('cps').className = 'cps';
+    $.id(page).hidden = false;
+    if (page == 'main') $.id('main').style.display = 'inline-block';
+    if (page == 'settingPage') $.id('settings').className = 'settings_stay';
+    if (page == 'infoPage') $.id('info').className = 'info_stay';
+    if (page == 'cpsPage') $.id('cps').className = 'cps_stay';
 }
 
 const openSearchPage = () => {
@@ -224,26 +220,26 @@ const resize = (show, force) => {
     if (!force && !config.get('autoShrink')) return;
     if (show != null) nowShow = show;
     else nowShow ^= true;
-    document.getElementById('show').style.transform = `rotate(${nowShow ? 0 : 90}deg)`;
+    $.id('show').style.transform = `rotate(${nowShow ? 0 : 90}deg)`;
     console.log({ w: config.get('width'), h: nowShow ? config.get('height') : 40 })
     window.runtime.WindowSetSize(config.get('width'), nowShow ? config.get('height') : 40);
 }
 
 const changeDiv = () => {
-    nowType = document.getElementById('infotype').value;
+    nowType = $.id('infotype').value;
     changeCategory();
     loadSubGame();
     updateHTML();
 }
 
 const loadSubGame = (val) => {
-    document.getElementById('subGame').innerHTML = subGame[nowType] != null ? subGame[nowType].reduce((p, c) => p + `<option value="${c.id}">${c.name}</option>`, '') : '';
+    $.id('subGame').innerHTML = subGame[nowType] != null ? subGame[nowType].reduce((p, c) => p + `<option value="${c.id}">${c.name}</option>`, '') : '';
     setSubGame(val);
 }
 
 const setSubGame = (val) => {
     if (val == null)
-        nowSub = document.getElementById('subGame').value;
+        nowSub = $.id('subGame').value;
     config.set('lastSub', nowSub);
     updateHTML();
 }
@@ -251,17 +247,17 @@ const setSubGame = (val) => {
 const updateApiRate = () => {
     hypixel.reset_rate_limit--;
     if (hypixel.reset_rate_limit == 0) hypixel.reset_rate_limit = 300;
-    document.getElementById('api_limit_remain').style['stroke-dashoffset'] = 100 - 100 * hypixel.remain_rate_limit / hypixel.max_rate_limit;
-    document.getElementById('api_limit_remain_num').innerHTML = hypixel.remain_rate_limit;
-    document.getElementById('api_limit_reset').style['stroke-dashoffset'] = 100 - hypixel.reset_rate_limit / 3;
-    document.getElementById('api_limit_reset_num').innerHTML = hypixel.reset_rate_limit;
+    $.id('api_limit_remain').style['stroke-dashoffset'] = 100 - 100 * hypixel.remain_rate_limit / hypixel.max_rate_limit;
+    $.id('api_limit_remain_num').innerHTML = hypixel.remain_rate_limit;
+    $.id('api_limit_reset').style['stroke-dashoffset'] = 100 - hypixel.reset_rate_limit / 3;
+    $.id('api_limit_reset_num').innerHTML = hypixel.reset_rate_limit;
 }
 
 const updateHTML = async () => {
-    let type = document.getElementById('infotype'), sub = document.getElementById('subGame');
-    document.getElementById('current_ping').innerHTML = `&nbsp;${type.options[type.selectedIndex].childNodes[0].data} - ${sub.options[sub.selectedIndex].childNodes[0].data} Mojang ${hypixel.mojang_ping}ms Hypixel ${hypixel.hypixel_ping}ms`;
+    let type = $.id('infotype'), sub = $.id('subGame');
+    $.id('current_ping').innerHTML = `&nbsp;${type.options[type.selectedIndex].childNodes[0].data} - ${sub.options[sub.selectedIndex].childNodes[0].data} Mojang ${hypixel.mojang_ping}ms Hypixel ${hypixel.hypixel_ping}ms`;
 
-    let main = document.getElementById('main');
+    let main = $.id('main');
     resetError(false);
 
     if (config.get('logPath') == '')
@@ -288,7 +284,9 @@ const updateHTML = async () => {
             continue;
         }
         let tooltip = await hypixel.getToolTipData(dataList[i].name);
-        main.innerHTML += `<tr><th>${dataList[i].data[dataList[i].data.length - 1].data.reduce((p, c) => { p.push(`<span style="color:${c.color}">${c.text}</span>`); return p; }, []).join('&nbsp;')}</th>
+        main.innerHTML += `<tr><th>${dataList[i].data[dataList[i].data.length - 1].data.reduce((p, c) => {
+            p.push(`<span title="${i18n.now()['tag_' + c.detail]}" style="color:${c.color}">${c.text}</span>`); return p;
+        }, []).join('&nbsp;')}</th>
         <th style="text-align:right;width:80px;height:12px">${dataList[i].data[0].format}</th>
         <td style="word-break:keep-all;height:12px" class="tooltip">
             <img src="https://crafatar.com/avatars/${await hypixel.getPlayerUuid(dataList[i].name)}?overlay" style="position:relative;width:15px;height:15px;top:2px">
@@ -300,63 +298,9 @@ const updateHTML = async () => {
     if (missingPlayer)
         pushError(`${i18n.now().error_player_missing}<br>${i18n.now().info_who}`, false);
     if (column >= 1 && column <= 8)
-        document.getElementById(`sort_${column}`).innerHTML += isUp ? '↑' : '↓';
+        $.id(`sort_${column}`).innerHTML += isUp ? '↑' : '↓';
     for (let i = 1; i <= 8; i++)
-        document.getElementById('sort_' + i).onclick = _ => setSortContext(i);
-}
-
-let searchPlayerName = null;
-const search = async (name) => {
-    if (document.getElementById('searchPage').hidden) switchPage('searchPage');
-    if (name == null) name = document.getElementById('playername').value;
-    else document.getElementById('playername').value = name;
-    searchPlayerName = name;
-    let i = await hypixel.download(name);
-    if (i == null) return document.getElementById('playerName').innerText = hypixel.verified ? i18n.now().error_api_error : i18n.now().error_api_key_invalid;
-    if (i == false) return document.getElementById('playerName').innerText = i18n.now().error_player_not_found;
-
-    let data = hypixel.data[name];
-    if (data.success == false) return console.log(data);
-
-    document.getElementById('playerName').innerHTML = formatColor(hypixel.formatName(name));
-    document.getElementById('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(name)}?overlay`;
-    document.getElementById('networkinfo').innerHTML = getData[config.get('lang')]['ov'](data.player);
-    document.getElementById('guild').innerHTML = hypixel.getGuild(name);
-    document.getElementById('status').innerHTML = await hypixel.getStatus(name);
-    document.getElementById('socialMedia').innerHTML = '';
-    socialMediaList.reduce((prev, cur) => {
-        let link = getSocialMedia(cur, data.player);
-        if (link != null) {
-            let icon = document.createElement('img');
-            icon.src = 'img/icons/' + cur.toLowerCase() + '.png';
-            icon.style = 'width:70px;height:70px;';
-            icon.addEventListener('click', () => window.go.main.App.OpenExternal(link));
-            prev.appendChild(icon);
-        }
-        return prev;
-    }, document.getElementById('socialMedia'));
-}
-
-let latestmode = '';
-const showDetail = (mode) => {
-    if (searchPlayerName == null || mode == 'details') return;
-    if (latestmode == mode) {
-        document.getElementById(latestmode + 'detail').innerHTML = '';
-        latestmode = '';
-    } else {
-        if (latestmode != '')
-            document.getElementById(latestmode + 'detail').innerHTML = '';
-        document.getElementById(mode + 'detail').innerHTML = getData[config.get('lang')][mode](hypixel.data[searchPlayerName].player);
-        latestmode = mode;
-    }
-}
-
-const downloadSkin = async () => {
-    if (searchPlayerName == null || searchPlayerName == '') return;
-    let a = document.createElement('a');
-    a.href = `https://crafatar.com/skins/${await hypixel.getPlayerUuid(searchPlayerName)}`;
-    a.download = `${hypixel.getPlayerUuid(searchPlayerName)}.png`;
-    a.click();
+        $.id('sort_' + i).onclick = _ => setSortContext(i);
 }
 
 let column = 0, isUp = false;//column: 0 none, 1 lvl, 2 name, 8 tag, 3-7 stats
@@ -381,7 +325,7 @@ const pickDataAndSort = () => {
             dataList.push({ name: players[i], nick: true });
             continue;
         }
-        let d = hypixel.getMiniData(players[i], nowType, document.getElementById('subGame').value);
+        let d = hypixel.getMiniData(players[i], nowType, $.id('subGame').value);
         d.push(hypixel.getTag(players[i]));
         dataList.push({ name: players[i], nick: false, data: d });
     }
@@ -401,7 +345,7 @@ const selectLogFile = async () => {
 }
 
 const clearMainPanel = () => {
-    let main = document.getElementById('main'), category = hypixel.getTitle(nowType);
+    let main = $.id('main'), category = hypixel.getTitle(nowType);
     main.innerHTML = `<tr><th id="sort_8" style="width:60px">${i18n.now().hud_main_tag}</th>
     <th id="sort_1" style="width:60px">${i18n.now().hud_main_level}</th>
     <th id="sort_2" style="width:400px">${i18n.now().hud_main_players}</th>
@@ -430,13 +374,13 @@ export const pushNetworkError = (code) => {
 const pushError = (error, stable) => {
     stable_message = stable;
     if (error == '' || error == null)
-        return document.getElementById('message').style.opacity = 0;
-    document.getElementById('message').style.opacity = 1;
-    document.getElementById('message').innerHTML = error;
+        return $.id('message').style.opacity = 0;
+    $.id('message').style.opacity = 1;
+    $.id('message').innerHTML = error;
 }
 
 const resetError = (force) => {
-    if (force || !stable_message) return document.getElementById('message').style.opacity = 0;
+    if (force || !stable_message) return $.id('message').style.opacity = 0;
 }
 
 const addManual = async (name) => {
@@ -446,9 +390,9 @@ const addManual = async (name) => {
 }
 
 const copyApiKey = () => {
-    navigator.clipboard.writeText(document.getElementById('apiKey').value);
-    document.getElementById('copy_api_key').innerHTML = i18n.data[i18n.current].page.copied_api_key;
-    setTimeout(_ => document.getElementById('copy_api_key').innerHTML = i18n.data[i18n.current].page.copy_api_key, 1000)
+    navigator.clipboard.writeText($.id('apiKey').value);
+    $.id('copy_api_key').innerHTML = i18n.data[i18n.current].page.copied_api_key;
+    setTimeout(_ => $.id('copy_api_key').innerHTML = i18n.data[i18n.current].page.copy_api_key, 1000)
 }
 
 window.addManual = addManual

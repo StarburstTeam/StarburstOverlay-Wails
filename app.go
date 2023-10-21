@@ -172,23 +172,27 @@ func (a *App) ShowNotification(title string, content string, actions []toast.Act
 	return ""
 }
 
-type FetchResult struct {
-	body   string
-	status int
+type ResponseBody struct {
+	Body    string
+	Status  int
+	Headers http.Header
 }
 
-func (a *App) Fetch(url string) (string, error) {
+func (a *App) Fetch(url string) (ResponseBody, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		return "{\"body\":\"\",\"status\":0}", err
+		return ResponseBody{
+			Body:   "",
+			Status: 0,
+		}, err
 	}
 	defer response.Body.Close()
 	bytes, _ := io.ReadAll(response.Body)
-	return "{\"body\":\"" + ToJsonString(strings.ReplaceAll(string(bytes), "\n", "")) + "\",\"status\":" + fmt.Sprint(response.StatusCode) + "}", err
-}
-
-func ToJsonString(s string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(s, "/", "\\/"), "\"", "\\\"")
+	return ResponseBody{
+		Body:    string(bytes),
+		Status:  response.StatusCode,
+		Headers: response.Header,
+	}, err
 }
 
 func (a *App) OpenFileDialog(title string, filePattern string) (string, error) {

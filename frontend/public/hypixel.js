@@ -2,6 +2,7 @@ import { blacklist } from "./blacklist";
 import { sleep, formatColor, formatColorFromString, toDefault, formatNameString } from "./util";
 import { pushNetworkError } from "./index"
 import { getGuild, getStatus } from "./i18n/hypixel_i18n";
+import { $ } from "./global";
 
 //this file contains api to hypixel
 export class Hypixel {
@@ -25,11 +26,10 @@ export class Hypixel {
         if (this.uuids[name] != null) return this.uuids[name];
         let start = new Date().getTime();
         let a = await window.go.main.App.Fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
-            .then(res => JSON.parse(res))
             .then(res => {
-                if (res.status == 404) return null;
-                if (res.status == 429) return 429;
-                return JSON.parse(res.body);
+                if (res.Status == 404) return null;
+                if (res.Status == 429) return 429;
+                return JSON.parse(res.Body);
             });
         this.mojang_ping = new Date().getTime() - start;
         if (a == null) return null;
@@ -44,14 +44,13 @@ export class Hypixel {
         try {
             let start = new Date().getTime();
             let res = await window.go.main.App.Fetch(`https://api.hypixel.net/player?key=${this.apiKey}&uuid=${uuid}`)
-                .then(res => JSON.parse(res))
                 .catch(err => { throw err })
                 .then(res => {
-                    // this.max_rate_limit = +res.headers.get('ratelimit-limit');
-                    // this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
-                    // this.reset_rate_limit = +res.headers.get('ratelimit-reset');
-                    if (res.status < 400) return JSON.parse(res.body);
-                    throw res.status;
+                    this.max_rate_limit = +res.Headers['Ratelimit-Limit'][0];
+                    this.remain_rate_limit = +res.Headers['Ratelimit-Remaining'][0];
+                    this.reset_rate_limit = +res.Headers['Ratelimit-Reset'][0];
+                    if (res.Status < 400) return JSON.parse(res.Body);
+                    throw res.Status;
                 });
             this.hypixel_ping = new Date().getTime() - start;
             return res;
@@ -64,14 +63,13 @@ export class Hypixel {
         try {
             let start = new Date().getTime();
             let res = await window.go.main.App.Fetch(`https://api.hypixel.net/guild?key=${this.apiKey}&player=${uuid}`)
-                .then(res => JSON.parse(res))
                 .catch(err => { throw err })
                 .then(res => {
-                    // this.max_rate_limit = +res.headers.get('ratelimit-limit');
-                    // this.remain_rate_limit = +res.headers.get('ratelimit-remaining');
-                    // this.reset_rate_limit = +res.headers.get('ratelimit-reset');
-                    if (res.status < 400) return JSON.parse(res.body);
-                    throw res.status;
+                    this.max_rate_limit = +res.Headers['Ratelimit-Limit'][0];
+                    this.remain_rate_limit = +res.Headers['Ratelimit-Remaining'][0];
+                    this.reset_rate_limit = +res.Headers['Ratelimit-Reset'][0];
+                    if (res.Status < 400) return JSON.parse(res.Body);
+                    throw res.Status;
                 });
             this.hypixel_ping = new Date().getTime() - start;
             return res;
@@ -148,32 +146,33 @@ export class Hypixel {
         let guild_id = this.data[name ?? '']?.guild?._id ?? '';
         let uuid = this.uuids[name ?? ''];
         let tags = { value: 0, data: [] };
-        if (name == null || uuid == '40dff9cbb87b473f946b4dc9776949cc' || uuid == 'f1f464287e894024a5554610d635fa55') {
+        if (name == null) return tags;
+        if (uuid == '40dff9cbb87b473f946b4dc9776949cc' || uuid == 'f1f464287e894024a5554610d635fa55') {
             tags.value = Math.max(tags.value, 100);
             tags.data.push({ text: 'D', color: '#FFAA00', detail: "developer" });//Developer
         }
-        if (name == null || ((api?.achievements?.bedwars_level ?? 0) < 15 && (api?.stats?.Bedwars?.final_kills_bedwars ?? 0) / (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) > 5)
+        if (((api?.achievements?.bedwars_level ?? 0) < 15 && (api?.stats?.Bedwars?.final_kills_bedwars ?? 0) / (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) > 5)
             || ((api?.achievements?.bedwars_level ?? 0) > 15 && (api?.achievements?.bedwars_level ?? 0) < 100 && (api?.achievements?.bedwars_level ?? 0) / ((api?.stats?.Bedwars?.final_kills_bedwars ?? 0) / (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0)) <= 5)) {
             tags.value = Math.max(tags.value, 50);
             tags.data.push({ text: 'A', color: '#FFFF00', detail: "alt" });//Alt
         }
-        if (name == null || (api?.achievements?.bedwars_level ?? 0) < 150 && (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) / (api?.stats?.Bedwars?.losses_bedwars ?? 0) < 0.75 && (api?.stats?.Bedwars?.final_kills_bedwars ?? 0) / (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) < 1.5) {
+        if ((api?.achievements?.bedwars_level ?? 0) < 150 && (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) / (api?.stats?.Bedwars?.losses_bedwars ?? 0) < 0.75 && (api?.stats?.Bedwars?.final_kills_bedwars ?? 0) / (api?.stats?.Bedwars?.final_deaths_bedwars ?? 0) < 1.5) {
             tags.value = Math.max(tags.value, 30);
             tags.data.push({ text: 'S', color: '#FFFF00', detail: "sniper" });//Sniper
         }
-        if (name == null || api.channel == 'PARTY') {
+        if (api.channel == 'PARTY') {
             tags.value = Math.max(tags.value, 10);
             tags.data.push({ text: 'P', color: '#FFFF00', detail: "potential_party" });//Potential Party
         }
-        if (name == null || guild_id != '' && guild_id == this.owner_guild_id) {
+        if (guild_id != '' && guild_id == this.owner_guild_id) {
             tags.value = Math.max(tags.value, 90);
             tags.data.push({ text: 'G', color: '#55FF55', detail: "same_guild" });//Same Guild
         }
-        if (name == null || blacklist.player != null && blacklist.player.find(x => x.uuid == uuid) != null) {
+        if (blacklist.player != null && blacklist.player.find(x => x.uuid == uuid) != null) {
             tags.value = Math.max(tags.value, 60);
             tags.data.push({ text: 'H', color: '#FF5555', detail: "blacklist_player" });//Blacklist Player
         }
-        if (name == null || blacklist.guild != null && guild_id != '' && blacklist.guild.find(x => x._id == guild_id) != null) {
+        if (blacklist.guild != null && guild_id != '' && blacklist.guild.find(x => x._id == guild_id) != null) {
             tags.value = Math.max(tags.value, 60);
             tags.data.push({ text: 'G', color: '#FF5555', detail: "blacklist_guild" });//Blacklist Guild
         }
@@ -255,11 +254,10 @@ export class Hypixel {
     getGuild = (lang, name) => getGuild[lang](this.data[name].guild, this.uuids[name]);
     getStatus = async (lang, name) => {
         const b = await window.go.main.App.Fetch(`https://api.hypixel.net/status?key=${this.apiKey}&uuid=${await this.getPlayerUuid(name)}`)
-            .then(res => JSON.parse(res))
             .catch(reason => console.log(reason))
-            .then(res => JSON.parse(res.body));
+            .then(res => JSON.parse(res.Body));
         if (!b.success)
-            return document.getElementById('status').innerHTML = b.cause;
+            return $.id('status').innerHTML = b.cause;
         return getStatus[lang](b.session);
     }
 }

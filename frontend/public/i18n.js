@@ -1,3 +1,5 @@
+import { $ } from "./global";
+
 export class I18n {
     constructor(current) {
         this.current = current;
@@ -20,7 +22,7 @@ export class I18n {
         console.log(this.data);
         console.log(this.current);
         Object.keys(this.data[this.current].page).forEach((i) => {
-            let e = document.getElementById(i);
+            let e = $.id(i);
             if (e != null) e.innerHTML = this.data[this.current].page[i];
         });
     }

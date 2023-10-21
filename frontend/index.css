@@ -398,3 +398,13 @@ select {
     font-size: large;
     font-family: consolas;
 }
+
+@keyframes loading_icon {
+    from {
+        left: 20%;
+    }
+
+    to {
+        left: 80%;
+    }
+}
