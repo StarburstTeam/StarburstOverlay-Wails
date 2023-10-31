@@ -14,9 +14,6 @@ export class I18n {
         }
     }
     now = () => this.data[this.current].values;
-    getAll = () => Object.keys(this.data).reduce((p, c) => {
-        p.push({ id: c, name: this.data[c].name });
-    }, []);
     set = (id) => this.current = id;
     initPage = () => {
         console.log(this.data);

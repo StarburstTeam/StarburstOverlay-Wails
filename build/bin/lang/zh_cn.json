@@ -82,7 +82,7 @@
         "god": "神",
         "link_github": "&nbsp; 如果遇到任何问题，可以在Github上发起Issue（点此打开）",
         "language_tooltip": "你在游戏内设置的语言",
-        "log_tooltip": "The log path your current client used.<br>Click for more info.",
+        "log_tooltip": "当前客户端的日志路径",
         "api_tooltip": "从developer.hypixel.net获取",
         "game_mode_tooltip": "你当前正在玩的游戏模式",
         "done": "完成"

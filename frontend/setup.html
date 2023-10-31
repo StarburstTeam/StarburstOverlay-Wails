@@ -6,6 +6,7 @@
     <script src="wails/runtime.js"></script>
     <title>Starburst Overlay</title>
     <script type="module" src="public/i18n.js"></script>
+    <script type="module" src="public/global.js"></script>
     <script type="module" src="public/config.js"></script>
     <script type="module" src="public/setup.js"></script>
     <link rel="styleSheet" href="scrollbar.css">
@@ -22,8 +23,8 @@
     <div id="menu" class="menu">
         <div class="title" style="position:absolute;left:5px;top:-5px">Starburst</div>
         <div id="buttons" style="float:right;margin-right:5px;margin-top:2px;">
-            <button id="minimize" onclick="window.runtime.WindowMinimise()"></button>
-            <button id="quit" onclick="window.runtime.Quit()"></button>
+            <button id="minimize" class="menu_button" onclick="window.runtime.WindowMinimise()"></button>
+            <button id="quit" class="menu_button" onclick="window.runtime.Quit()"></button>
         </div>
     </div>
     <div style="color:aqua;font-family:consolas;left:20px;position:relative;">

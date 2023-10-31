@@ -6,6 +6,7 @@
     <script src="wails/runtime.js"></script>
     <title>Starburst Overlay</title>
     <script type="module" src="public/blacklist.js"></script>
+    <script type="module" src="public/global.js"></script>
     <script type="module" src="public/i18n.js"></script>
     <script type="module" src="public/util.js"></script>
     <script type="module" src="public/config.js"></script>
@@ -27,36 +28,40 @@
     </script>
     <div id="menu" class="menu">
         <div class="title" style="position:absolute;left:5px;top:-5px">Starburst</div>
-        <div id="buttons" style="float:right;margin-right:5px;margin-top:2px;">
-            <svg style="width:36px;height:36px;">
-                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_remain"></circle>
-                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
-                    <tspan class="progress_text" id="api_limit_remain_num">0</tspan>
-                </text>
-            </svg>
-            <svg style="width:36px;height:36px;">
-                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_reset"></circle>
-                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
-                    <tspan class="progress_text" id="api_limit_reset_num">0</tspan>
-                </text>
-            </svg>
+        <div id="buttons">
+            <button id="quit" class="menu_button"></button>
+            <button id="minimize" class="menu_button"></button>
+            <button id="show" class="menu_button"></button>
+            <button id="info" class="menu_button info"></button>
+            <button id="settings" class="menu_button settings"></button>
+            <button id="session" class="menu_button session"></button>
+            <button id="search" class="menu_button search"></button>
+            <button id="cps" class="menu_button cps"></button>
+            <button id="network" class="menu_button network"></button>
             <button id="update" class="update" hidden
                 onclick="window.go.main.App.OpenExternal('https://github.com/IAFEnvoy/StarburstOverlay/releases')"></button>
-            <button id="cps"></button>
-            <button id="search"></button>
-            <button id="settings"></button>
-            <button id="info"></button>
-            <button id="show"></button>
-            <button id="minimize"></button>
-            <button id="quit"></button>
+            <h4 id="current_ping" class="menu_draggable"></h4>
+            <svg class="menu_draggable" style="width:36px;height:36px;">
+                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_reset"></circle>
+                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
+                    <tspan class="progress_text" id="api_limit_reset_num" title="API Limit Reset">0</tspan>
+                </text>
+            </svg>
+            <svg class="menu_draggable" style="width:36px;height:36px;">
+                <circle class="progress_circle" cx="18" cy="18" r="15" id="api_limit_remain"></circle>
+                <text x="18" y="23" fill="#00ffff" text-anchor="middle">
+                    <tspan class="progress_text" id="api_limit_remain_num" title="API Limit Remain">0</tspan>
+                </text>
+            </svg>
         </div>
     </div>
-    <div style="height:20px">
-        <div class="title" id="current_ping" style="position:relative;font-size:20px;top:-3px;white-space:nowrap;">
-        </div>
+    <div style="height:20px;display:inline;">
+        <input style="position:relative;left:10px;display: inline-block;top:-20px;width: 200px;" id="search_single" type="text"
+            placeholder="Enter Player Name">
+        <h4 id="current_mode" style="font-size:20px;display: inline-block"></h4>
     </div>
     <table id="main" border="1"
-        style="display:inline-block;width:100%;top:5px;height:calc(100% - 65px);overflow-y:scroll;font-size:15px;position:relative">
+        style="display:inline-block;width:100%;top:-35px;height:calc(100% - 85px);overflow-y:scroll;font-size:15px;position:relative">
     </table>
     <div id="settingPage" hidden>
         <br>
@@ -124,7 +129,6 @@
             <span class="tooltiptext" id="start_notification_tooltip">Send a notification when game start</a></span>
         </div><br>
     </div>
-    <br>
     <div id="cpsPage" style="text-align:center" hidden>
         <div>
             <button class="setting_button" id="cps_1s">1s</button>
@@ -163,6 +167,8 @@
         <!-- <div>
             <button class="searchButton" onclick="alert('注入成功！')">点击进行注入</button>
         </div> -->
+    </div>
+    <div id="sessionPage" style="text-align:center" hidden>
     </div>
     <div id="message" class="message" style="position:absolute;left:25%;width:50%;height:auto;bottom:50px;">
     </div>

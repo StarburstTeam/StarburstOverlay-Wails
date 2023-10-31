@@ -9,14 +9,18 @@ body {
     overflow: hidden;
     margin: 0;
     height: 100%;
+    user-select: none;
+    font-family: consolas;
+    /*vars*/
+    --theme-color: aqua;
 }
 
 .title {
-    font-family: consolas;
     font-size: 40px;
-    color: aqua;
+    color: var(--theme-color);
     display: inline;
     font-weight: bold;
+    -webkit-app-region: drag;
 }
 
 .menu {
@@ -26,9 +30,9 @@ body {
     width: 100%;
 }
 
-#quit {
+.menu_button_stay,
+.menu_button {
     background: transparent;
-    background-image: url("./public/img/quit1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -36,196 +40,132 @@ body {
     outline: none;
     -webkit-app-region: no-drag;
     transition: all 0.2s ease-out;
+}
+
+.menu_draggable {
+    -webkit-app-region: drag;
+}
+
+.menu_button:hover {
+    background: transparent;
+    background-size: cover;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+#buttons {
+    -webkit-app-region: drag;
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+
+h4 {
+    top: -20px;
+    left: 4px;
+    right: 5px;
+    position: relative;
+    color: var(--theme-color);
+}
+
+#quit {
+    background-image: url("./public/img/quit1.png");
 }
 
 #quit:hover {
-    background: transparent;
     background-image: url("./public/img/quit2.png");
-    background-size: cover;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
 }
 
 #minimize {
-    background: transparent;
     background-image: url("./public/img/min1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 #minimize:hover {
-    background: transparent;
     background-image: url("./public/img/min2.png");
-    background-size: cover;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
 }
 
 #show {
-    background: transparent;
     background-image: url("./public/img/show1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 #show:hover {
-    background: transparent;
     background-image: url("./public/img/show2.png");
-    background-size: cover;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
 }
 
 .settings {
-    background: transparent;
     background-image: url("./public/img/settings1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 .settings_stay,
 .settings:hover {
-    background: transparent;
     background-image: url("./public/img/settings2.png");
-    background-size: cover;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    transition: all 0.2s ease-out;
 }
 
 .cps {
-    background: transparent;
     background-image: url("./public/img/cps1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 .cps_stay,
 .cps:hover {
-    background: transparent;
     background-image: url("./public/img/cps2.png");
-    background-size: cover;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    transition: all 0.2s ease-out;
 }
 
 .search {
-    background: transparent;
     background-image: url("./public/img/search1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 .search_stay,
 .search:hover {
-    background: transparent;
     background-image: url("./public/img/search2.png");
-    background-size: cover;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    transition: all 0.2s ease-out;
 }
 
 .info {
-    background: transparent;
     background-image: url("./public/img/info1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 .info_stay,
 .info:hover {
-    background: transparent;
     background-image: url("./public/img/info2.png");
-    background-size: cover;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    transition: all 0.2s ease-out;
 }
 
 .update {
-    background: transparent;
     background-image: url("./public/img/update1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    -webkit-app-region: no-drag;
-    transition: all 0.2s ease-out;
 }
 
 .update:hover {
-    background: transparent;
     background-image: url("./public/img/update2.png");
-    background-size: cover;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    height: 35px;
-    width: 35px;
-    border: none;
-    outline: none;
-    transition: all 0.2s ease-out;
+}
+
+.session {
+    background-image: url("./public/img/session1.png");
+}
+
+.session_stay,
+.session:hover {
+    background-image: url("./public/img/session2.png");
+}
+
+.network {
+    background-image: url("./public/img/network1.png");
+}
+
+.network_stay,
+.network:hover {
+    background-image: url("./public/img/network2.png");
 }
 
 .main {
     font-family: consolas;
     font-weight: bolder;
-    color: aqua;
+    color: var(--theme-color);
     overflow-y: scroll;
 }
 
 table {
     font-family: consolas;
     font-weight: bolder;
-    color: aqua;
+    color: var(--theme-color);
     overflow-y: scroll;
     border: 1px solid #333;
     border-style: solid;
@@ -233,24 +173,21 @@ table {
 }
 
 th {
-    border-left: 1px solid aqua;
-    border-top: 1px solid aqua;
-    border-bottom: 1px solid aqua;
+    border-left: 1px solid var(--theme-color);
+    border-top: 1px solid var(--theme-color);
+    border-bottom: 1px solid var(--theme-color);
 }
 
 td {
-    border-left: 1px solid aqua;
-    border-top: 1px solid aqua;
-    border-bottom: 1px solid aqua;
-    border: 1px solid aqua;
+    border: 1px solid var(--theme-color);
     border-style: solid;
     border-collapse: collapse;
 }
 
 thead,
 tfoot {
-    background-color: aqua;
-    color: aqua;
+    background-color: var(--theme-color);
+    color: var(--theme-color);
 }
 
 .subtitle {
@@ -259,7 +196,17 @@ tfoot {
     text-align: center;
     top: 25px;
     font-size: 25px;
-    color: aqua;
+    color: var(--theme-color);
+    padding-inline-start: 10px;
+}
+
+.subtitle {
+    display: inline;
+    position: absolute;
+    text-align: center;
+    top: 25px;
+    font-size: 25px;
+    color: var(--theme-color);
     padding-inline-start: 10px;
 }
 
@@ -330,7 +277,7 @@ select {
 .setting_subtitle {
     text-align: center;
     font-size: 25px;
-    color: aqua;
+    color: var(--theme-color);
     font-family: consolas;
     display: inline-block;
     padding-left: 20px;
@@ -364,10 +311,10 @@ select {
 .tooltip .tooltiptext {
     padding: 5px;
     background-color: gray;
-    border-color: aqua;
+    border-color: var(--theme-color);
     border-style: solid;
     border-width: 1px;
-    color: aqua;
+    color: var(--theme-color);
     text-align: center;
     border-radius: 6px;
     opacity: 0;
@@ -393,7 +340,7 @@ select {
 }
 
 .taginfo {
-    color: aqua;
+    color: var(--theme-color);
     text-align: left;
     font-size: large;
     font-family: consolas;

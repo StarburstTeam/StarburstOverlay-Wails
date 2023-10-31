@@ -29,24 +29,22 @@ window.onload = async () => {
         window.go.main.App.OpenSelf('setup');
         window.runtime.Quit();
     }
-    i18n = new I18n(config.get('lang'));
-    await i18n.load();
     window.runtime.WindowSetSize(config.get('width'), config.get('height'));
     window.runtime.WindowSetPosition(config.get('x'), config.get('y'));
     window.screenX = window.screenLeft = config.get('x');
     window.screenY = window.screenTop = config.get('y');
-    i18n.initPage();
-    loadBlacklist();
 
-    $.id('settings').className = 'settings';
-    $.id('search').className = 'search';
-    $.id('info').className = 'info';
-    $.id('cps').className = 'cps';
+    i18n = new I18n(config.get('lang'));
+    await i18n.load();
+    i18n.initPage();
+
+    loadBlacklist();
 
     $.id('cps').onclick = _ => switchPage('cpsPage');
     $.id('search').onclick = _ => openSearchPage();
     $.id('settings').onclick = _ => switchPage('settingPage');
     $.id('info').onclick = _ => switchPage('infoPage');
+    $.id('session').onclick = _ => switchPage('sessionPage');
 
     $.id('lang').onclick = async _ => {
         config.set('lang', $.id('lang').value);
@@ -59,6 +57,7 @@ window.onload = async () => {
         hypixel.apiKey = $.id('apiKey').value;
         config.set('apiKey', hypixel.apiKey);
     }
+    $.id('copy_api_key').onclick = _ => copyApiKey();
     $.id('ign').onchange = _ => {
         config.set('ign', $.id('ign').value);
         hypixel.setSelfIgn(config.get('ign'));
@@ -80,6 +79,9 @@ window.onload = async () => {
     $.id('quit').onclick = _ => { onClose(); window.runtime.Quit(); }
 
     hypixel = new Hypixel(config.get('apiKey'));
+    hypixel.setSelfIgn(config.get('ign'));
+    setInterval(_ => updateApiRate(), 1000);
+
     updateHTML();
     nowType = config.get('lastType');
     nowSub = config.get('lastSub');
@@ -96,11 +98,9 @@ window.onload = async () => {
     $.id('infotype').value = nowType;
     $.id('subGame').value = nowSub;
 
-    setInterval(() => updateApiRate(), 1000);
-
     if (config.get('logPath') == '') return;
     // hasLog = fs.existsSync(config.get('logPath'));
-    const tail = new Tail(config.get('logPath'), async (data) => {
+    new Tail(config.get('logPath'), async (data) => {
         let s = data.indexOf('[CHAT]');
         if (s == -1) return;//not a chat log
         let changed = false;
@@ -200,14 +200,17 @@ const switchPage = (page) => {
     $.id('settingPage').hidden = true;
     $.id('infoPage').hidden = true;
     $.id('cpsPage').hidden = true;
-    $.id('settings').className = 'settings';
-    $.id('info').className = 'info';
-    $.id('cps').className = 'cps';
+    $.id('sessionPage').hidden = true;
+    $.id('settings').className = 'menu_button settings';
+    $.id('info').className = 'menu_button info';
+    $.id('cps').className = 'menu_button cps';
+    $.id('session').className = 'menu_button session';
     $.id(page).hidden = false;
     if (page == 'main') $.id('main').style.display = 'inline-block';
-    if (page == 'settingPage') $.id('settings').className = 'settings_stay';
-    if (page == 'infoPage') $.id('info').className = 'info_stay';
-    if (page == 'cpsPage') $.id('cps').className = 'cps_stay';
+    if (page == 'settingPage') $.id('settings').className = 'menu_button_stay settings_stay';
+    if (page == 'infoPage') $.id('info').className = 'menu_button_stay info_stay';
+    if (page == 'cpsPage') $.id('cps').className = 'menu_button_stay cps_stay';
+    if (page == 'sessionPage') $.id('session').className = 'menu_button_stay session_stay';
 }
 
 const openSearchPage = () => {
@@ -241,6 +244,8 @@ const setSubGame = (val) => {
     if (val == null)
         nowSub = $.id('subGame').value;
     config.set('lastSub', nowSub);
+    let type = $.id('infotype'), sub = $.id('subGame');
+    $.id('current_mode').innerHTML = `&nbsp;${type.options[type.selectedIndex].childNodes[0].data} - ${sub.options[sub.selectedIndex].childNodes[0].data}`;
     updateHTML();
 }
 
@@ -251,12 +256,11 @@ const updateApiRate = () => {
     $.id('api_limit_remain_num').innerHTML = hypixel.remain_rate_limit;
     $.id('api_limit_reset').style['stroke-dashoffset'] = 100 - hypixel.reset_rate_limit / 3;
     $.id('api_limit_reset_num').innerHTML = hypixel.reset_rate_limit;
+
+    $.id('current_ping').innerHTML = `Mojang&nbsp;&nbsp;${hypixel.mojang_ping}ms<br>Hypixel&nbsp;${hypixel.hypixel_ping}ms`;
 }
 
 const updateHTML = async () => {
-    let type = $.id('infotype'), sub = $.id('subGame');
-    $.id('current_ping').innerHTML = `&nbsp;${type.options[type.selectedIndex].childNodes[0].data} - ${sub.options[sub.selectedIndex].childNodes[0].data} Mojang ${hypixel.mojang_ping}ms Hypixel ${hypixel.hypixel_ping}ms`;
-
     let main = $.id('main');
     resetError(false);
 
@@ -275,12 +279,8 @@ const updateHTML = async () => {
             main.innerHTML += `<tr><th>${formatColor('§eN')}</th>
             <th style="text-align:right">[ ? ]</th>
             <td>&nbsp; ${formatColor('§f' + dataList[i].name)}</td>
-            <th>?</th>
-            <th>?</th>
-            <th>?</th>
-            <th>?</th>
-            <th>?</th>
-            </tr>`;
+            <th>?</th><th>?</th><th>?</th>
+            <th>?</th><th>?</th></tr>`;
             continue;
         }
         let tooltip = await hypixel.getToolTipData(dataList[i].name);
