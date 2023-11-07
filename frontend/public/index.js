@@ -78,6 +78,15 @@ window.onload = async () => {
     $.id('minimize').onclick = _ => window.runtime.WindowMinimise();
     $.id('quit').onclick = _ => { onClose(); window.runtime.Quit(); }
 
+    $.id('search_single').onkeydown = key => {
+        if (key.key == 'Enter')
+            $.id('add_manual').onclick();
+    }
+    $.id('add_manual').onclick = _ => {
+        addManual($.id('search_single').value);
+        $.id('search_single').value = '';
+    }
+
     hypixel = new Hypixel(config.get('apiKey'));
     hypixel.setSelfIgn(config.get('ign'));
     setInterval(_ => updateApiRate(), 1000);
@@ -97,6 +106,7 @@ window.onload = async () => {
     loadSubGame(nowSub);
     $.id('infotype').value = nowType;
     $.id('subGame').value = nowSub;
+    setSubGameInfo();
 
     if (config.get('logPath') == '') return;
     // hasLog = fs.existsSync(config.get('logPath'));
@@ -191,12 +201,12 @@ const changeCategory = () => {
     config.set('lastType', nowType);
 }
 
-let lastPage = 'main';
+let lastPage = 'mainPage';
 const switchPage = (page) => {
-    if ($.id('main').hidden && lastPage == page) page = 'main';
+    if ($.id('mainPage').hidden && lastPage == page) page = 'mainPage';
     lastPage = page;
-    $.id('main').style.display = '';
-    $.id('main').hidden = true;
+    $.id('mainPage').style.display = '';
+    $.id('mainPage').hidden = true;
     $.id('settingPage').hidden = true;
     $.id('infoPage').hidden = true;
     $.id('cpsPage').hidden = true;
@@ -206,7 +216,7 @@ const switchPage = (page) => {
     $.id('cps').className = 'menu_button cps';
     $.id('session').className = 'menu_button session';
     $.id(page).hidden = false;
-    if (page == 'main') $.id('main').style.display = 'inline-block';
+    if (page == 'mainPage') $.id('mainPage').style.display = 'inline-block';
     if (page == 'settingPage') $.id('settings').className = 'menu_button_stay settings_stay';
     if (page == 'infoPage') $.id('info').className = 'menu_button_stay info_stay';
     if (page == 'cpsPage') $.id('cps').className = 'menu_button_stay cps_stay';
@@ -214,7 +224,6 @@ const switchPage = (page) => {
 }
 
 const openSearchPage = () => {
-    // alert('This is currently unavailable in Wails version.');
     window.go.main.App.OpenSelf('search');
 }
 
@@ -244,14 +253,18 @@ const setSubGame = (val) => {
     if (val == null)
         nowSub = $.id('subGame').value;
     config.set('lastSub', nowSub);
+    updateHTML();
+    setSubGameInfo();
+}
+
+const setSubGameInfo = _ => {
     let type = $.id('infotype'), sub = $.id('subGame');
     $.id('current_mode').innerHTML = `&nbsp;${type.options[type.selectedIndex].childNodes[0].data} - ${sub.options[sub.selectedIndex].childNodes[0].data}`;
-    updateHTML();
 }
 
 const updateApiRate = () => {
     hypixel.reset_rate_limit--;
-    if (hypixel.reset_rate_limit == 0) hypixel.reset_rate_limit = 300;
+    if (hypixel.reset_rate_limit <= 0) hypixel.reset_rate_limit = 300;
     $.id('api_limit_remain').style['stroke-dashoffset'] = 100 - 100 * hypixel.remain_rate_limit / hypixel.max_rate_limit;
     $.id('api_limit_remain_num').innerHTML = hypixel.remain_rate_limit;
     $.id('api_limit_reset').style['stroke-dashoffset'] = 100 - hypixel.reset_rate_limit / 3;

@@ -11,8 +11,25 @@ body {
     height: 100%;
     user-select: none;
     font-family: consolas;
-    /*vars*/
+
+    /* VAPE V4 */
+    /* animation: rainbow 3s infinite linear; */
+    /* vars */
     --theme-color: aqua;
+}
+
+@keyframes rainbow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(180deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
 }
 
 .title {
@@ -144,15 +161,6 @@ h4 {
 .session_stay,
 .session:hover {
     background-image: url("./public/img/session2.png");
-}
-
-.network {
-    background-image: url("./public/img/network1.png");
-}
-
-.network_stay,
-.network:hover {
-    background-image: url("./public/img/network2.png");
 }
 
 .main {
@@ -290,13 +298,26 @@ select {
     font-size: 20px;
     font-weight: 300;
     color: #ffffff;
-    background: rgba(82, 82, 82, 0.582);
+    background: rgba(60, 60, 60, 0.4);
     cursor: pointer;
     border-width: 2px;
     border-style: solid;
     border-color: #b9b9b9;
     display: inline-block;
     padding: 0 22px;
+    transition: all 0.2s ease-out;
+}
+
+.setting_button:hover {
+    background: rgba(128, 128, 128, 0.582);
+}
+
+.add_button {
+    position: relative;
+    top: -20px;
+    width: 40px;
+
+    padding: 0 0;
 }
 
 .infopage {
@@ -354,4 +375,23 @@ select {
     to {
         left: 80%;
     }
+}
+
+.progress_circle {
+    fill: none;
+    stroke: var(--theme-color);
+    stroke-width: 4;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    stroke-linecap: round;
+    animation: circle 3s infinite;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+.progress_text {
+    font-size: 15px;
+    font-family: "consolas";
+    fill: var(--theme-color)
 }
