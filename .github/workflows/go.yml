@@ -65,7 +65,7 @@ jobs:
       - name: Compile exe
         run: |
           wails build -webview2 embed -nsis
-          cd bin
+          cd build
           ls
       - name: Upload To Release
         id: upload-release-asset
