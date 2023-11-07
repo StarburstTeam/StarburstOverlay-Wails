@@ -1,4 +1,4 @@
-name: 发布软件
+name: Build on Push
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
 
   jobs_window:
     needs: jobs_v # 等待 jobs_v 任务完成才执行
-    name: 构建window软件
+    name: Build Windows Installer
     timeout-minutes: 20
     runs-on: windows-2022
     env:
@@ -64,5 +64,16 @@ jobs:
           wails
       - name: Compile exe
         run: |
-          wails build -webview2 embed -upx
+          wails build -webview2 embed -nsis
+          cd bin
           ls
+      - name: Upload To Release
+       id: upload-release-asset
+       uses: actions/upload-release-asset@v1
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         upload_url: ${{ steps.create_release.outputs.upload_url }}
+         asset_path: ${{ github.workspace }}/build/installer/
+         asset_name: Starburst Overlay-installer.exe
+         asset_content_type: application/exe
