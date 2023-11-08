@@ -66,7 +66,7 @@ jobs:
         run: |
           mkdir -p build/installer 
           wails build -webview2 embed -nsis
-          cd build
+          cd build/installer
           ls
   jobs_r:
     needs: jobs_window
