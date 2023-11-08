@@ -68,6 +68,11 @@ jobs:
           wails build -webview2 embed -nsis
           cd build
           ls
+  jobs_r:
+    name: Upload Files
+    runs-on: ubuntu-latest
+    needs: jobs_window
+    steps:
       - name: Upload Release
         if: github.event.inputs.release == 'true' && !cancelled()
         uses: ncipollo/release-action@v1
