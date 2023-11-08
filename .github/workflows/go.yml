@@ -68,12 +68,3 @@ jobs:
           wails build -webview2 embed -nsis
           cd build
           ls
-      - name: Upload To Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ github.workspace }}/build/installer/Starburst Overlay-installer.exe
-          asset_name: Starburst Overlay-installer.exe
-          asset_content_type: application/exe
