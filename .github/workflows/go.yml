@@ -68,3 +68,16 @@ jobs:
           wails build -webview2 embed -nsis
           cd build
           ls
+      - name: Upload Release
+        if: github.event.inputs.release == 'true' && !cancelled()
+        uses: ncipollo/release-action@v1
+        with:
+          name: Starburst Overlay ${{  github.event.inputs.version }}
+          tag: ${{  github.event.inputs.version }}
+          omitBodyDuringUpdate: true
+          body: This release is built by github-action.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          artifacts: >
+            build/installer/Starburst Overlay-installer.exe
+            
