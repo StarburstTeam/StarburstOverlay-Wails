@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload Release
-        uses: actions/upload-@v3
+        uses: actions/upload-artifact@v3
         with:
           name: Windows Installer
           path: build/installer/Starburst Overlay-installer.exe
