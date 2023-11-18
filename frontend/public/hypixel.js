@@ -369,7 +369,7 @@ const formatBwLevel = (lvl) => {
 }
 
 //searcher
-export const modeList = ['bw', 'sw', 'mm', 'duel', 'uhc', 'mw', 'bb', 'pit', 'bsg', 'arcade'];
+export const modeList = ['bw', 'sw', 'mm', 'duel', 'uhc', 'mw', 'bb', 'bsg'];
 
 // 在等级 10 * k 至 10 * (k + 1) 时, 升一级所需经验
 const expReqPhased = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];

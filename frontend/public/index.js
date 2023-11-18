@@ -6,6 +6,7 @@ import { loadBlacklist } from './blacklist'
 import { setTestTime, onTestClick, resetTest } from './cps'
 import { formatColor } from './util'
 import { $ } from './global'
+import { readTemplateData } from './i18n/hypixel_i18n'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
@@ -87,7 +88,7 @@ window.onload = async () => {
         $.id('search_single').value = '';
     }
 
-    hypixel = new Hypixel(config.get('apiKey'));
+    window.hypixel = hypixel = new Hypixel(config.get('apiKey'));
     hypixel.setSelfIgn(config.get('ign'));
     setInterval(_ => updateApiRate(), 1000);
 
@@ -102,6 +103,7 @@ window.onload = async () => {
     $.id('infotype').innerHTML = i18n.getMainModeHTML();
     pushError();
     await readDisplayData(config);
+    await readTemplateData(config);
     changeCategory();
     loadSubGame(nowSub);
     $.id('infotype').value = nowType;
@@ -408,4 +410,4 @@ const copyApiKey = () => {
     setTimeout(_ => $.id('copy_api_key').innerHTML = i18n.data[i18n.current].page.copy_api_key, 1000)
 }
 
-window.addManual = addManual
+window.addManual = addManual;

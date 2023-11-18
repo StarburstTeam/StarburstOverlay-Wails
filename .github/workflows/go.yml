@@ -21,6 +21,15 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+      - name: Check if need to build
+        run: |
+          latest_commit_message=$(git log -1 --pretty=%B)
+          if [[ $latest_commit_message == *"Release"* ]]; then
+            echo "Release Push"
+           else
+            echo "Not Release Push"
+            exit 1
+          fi
       - name: Output Build Infomation
         run: |
           latest_commit_message=$(git log -1 --pretty=%B)

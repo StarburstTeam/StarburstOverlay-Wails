@@ -10,11 +10,11 @@ const colors = [
     '#000000', '#0000AA', '#00AA00', '#00AAAA', '#AA0000', '#AA00AA', '#FFAA00', '#AAAAAA',
     '#555555', '#5555FF', '#55FF55', '#55FFFF', '#FF5555', '#FF55FF', '#FFFF55', '#FFFFFF'
 ];
-export const formatColor = (data) => {
+export const formatColor = (data, default_color = 0) => {
     if (data == null) return 'Fail to get';
     return data.split('').reduce((ret, char, index, arr) =>
         ret += char == '§' ? '</span>' : arr[index - 1] == '§' ? '<span style="color:' + colors[parseInt(char, 16)] + '">' : char,
-        '<span style="color:' + colors[0] + '">') + '</span>';
+        '<span style="color:' + colors[default_color] + '">') + '</span>';
 }
 
 export const toDefault = (v, u, d) => v == u ? d : v;

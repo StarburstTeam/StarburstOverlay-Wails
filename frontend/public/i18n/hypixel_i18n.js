@@ -1,6 +1,8 @@
 import { formatNameString, formatDateTime, formatColor, formatColorFromString } from "../util";
 import { getThePitLevel } from "../hypixel";
 
+let templates = {};
+
 export const getData = {
     'en_us': {
         "ov": (api) => {
@@ -271,3 +273,151 @@ const getGuildLevel = (exp) => {
         else level++;
     }
 }
+
+
+
+/** This method will try to replace ${} in template with all keys in data
+ * 
+ *  Example : data = {test: xxx, test2: yyy}, template = this is ${test} message by ${tester}
+ * 
+ *  => this is xxx message by ${tester}
+ * 
+ *  We don't use eval() since it's an unsafe method, especially when template reads from outer files
+ */
+const buildText = (data, template) => Object.keys(data).reduce((p, c) => p.replaceAll(`\${${c}}`, formatColor(data[c] + [], 15)), template.join('<br>'))
+
+export const readTemplateData = async (config) => {
+    let path = `${await window.go.main.App.GetPath('this')}json\\template_${config.get('lang')}.json`;
+    templates = JSON.parse(await window.go.main.App.ReadJsonString(path));
+}
+
+const buildValue = (v1, v2) => {
+    if (v2 == null) return v1;
+    let s = v1 + ' -> ' + v2 + ' ';
+    if (v1 < v2) s += '§a↑';
+    if (v1 == v2) s += '§7×';
+    if (v1 > v2) s += '§c↓';
+    return s;
+}
+
+const buildValues = (name1, name2, nameR, obj1, obj2, key1, key2, fixed = 2) => {
+    let value1_1 = obj1?.[key1] ?? 0, value1_2 = obj1?.[key2] ?? 0, value2_1 = obj2?.[key1], value2_2 = obj2?.[key2];
+    let result = {};
+    result[name1] = buildValue(value1_1, value2_1);
+    result[name2] = buildValue(value1_2, value2_2);
+    let r1 = (value1_1 / value1_2).toFixed(fixed);
+    if (value2_1 != null && value2_2 != null) result[nameR] = buildValue(r1, (value2_1 / value2_2).toFixed(fixed));
+    else result[nameR] = buildValue(r1);
+    return result;
+}
+
+//全局搜索页面只需要传入第一个，session stats需要传入两个
+export const buildData = {
+    'ov': (api1, api2) => {
+        let achievements1 = api1?.achievements ?? {}, achievements2 = api2?.achievements ?? {};
+    },
+    'bw': (api1, api2) => {
+        let achievements1 = api1?.achievements ?? {}, achievements2 = api2?.achievements ?? {};
+        let bedwar1 = api1.stats?.Bedwars ?? {}, bedwar2 = api2?.stats?.Bedwars ?? {};
+        return buildText({
+            level: buildValue(achievements1?.bedwars_level ?? 0, achievements2?.bedwars_level),
+            coins: buildValue(bedwar1?.coins ?? 0, bedwar2?.coins),
+            winstreak: buildValue(bedwar1?.winstreak ?? 0, bedwar2?.winstreak),
+            ...buildValues('beds_broken', 'beds_lost', 'bblr', bedwar1, bedwar2, 'beds_broken_bedwars', 'beds_lost_bedwars'),
+            ...buildValues('wins', 'losses', 'wl_rate', bedwar1, bedwar2, 'wins_bedwars', 'losses_bedwars'),
+            ...buildValues('kills', 'deaths', 'kd_rate', bedwar1, bedwar2, 'kills_bedwars', 'deaths_bedwars'),
+            ...buildValues('final_kills', 'final_deaths', 'fkdr', bedwar1, bedwar2, 'final_kills_bedwars', 'final_deaths_bedwars'),
+            iron: buildValue(bedwar1?.iron_resources_collected_bedwars ?? 0, bedwar2?.iron_resources_collected_bedwars),
+            gold: buildValue(bedwar1?.gold_resources_collected_bedwars ?? 0, bedwar2?.gold_resources_collected_bedwars),
+            diamond: buildValue(bedwar1?.diamond_resources_collected_bedwars ?? 0, bedwar2?.diamond_resources_collected_bedwars),
+            emerald: buildValue(bedwar1?.emerald_resources_collected_bedwars ?? 0, bedwar2?.emerald_resources_collected_bedwars),
+        }, templates.bw);
+    },
+    'sw': (api1, api2) => {
+        let skywar1 = api1?.stats?.SkyWars ?? {}, skywar2 = api2?.stats?.SkyWars ?? {};
+        return buildText({
+            levelFormatted: buildValue(skywar1?.levelFormatted ?? '§71⋆', skywar2?.levelFormatted),
+            souls: buildValue(skywar1?.souls ?? 0, skywar2?.souls),
+            coins: buildValue(skywar1?.coins ?? 0, skywar2?.coins),
+            assists: buildValue(skywar1?.assists ?? 0, skywar2?.assists),
+            ...buildValues('kills', 'deaths', 'kd_rate', skywar1, skywar2, 'kills', 'deaths'),
+            ...buildValues('wins', 'losses', 'wl_rate', skywar1, skywar2, 'wins', 'losses'),
+        }, templates.sw);
+    },
+    'mm': (api1, api2) => {
+        let mm1 = api1?.stats?.MurderMystery ?? {}, mm2 = api2?.stats?.MurderMystery ?? {};
+        return buildText({
+            coins: buildValue(mm1?.coins ?? 0, mm2?.coins),
+            coins_pickedup: buildValue(mm1?.coins_pickedup ?? 0, mm2?.coins_pickedup),
+            murderer_chance: buildValue(mm1?.murderer_chance ?? 0, mm2?.murderer_chance),
+            detective_chance: buildValue(mm1?.detective_chance ?? 0, mm2?.detective_chance),
+            ...buildValues('wins', '_', 'win_rate', mm1, mm2, 'wins', 'games'),
+            ...buildValues('kills', 'deaths', 'kd_rate', mm1, mm2, 'kills', 'deaths'),
+            knife_kills: buildValue(mm1?.knife_kills ?? 0, mm2?.knife_kills),
+            bow_kills: buildValue(mm1?.bow_kills ?? 0, mm2?.bow_kills),
+            kills_as_murderer: buildValue(mm1?.kills_as_murderer ?? 0, mm2?.kills_as_murderer),
+            was_hero: buildValue(mm1?.was_hero ?? 0, mm2?.was_hero),
+            kills_as_infected: buildValue(mm1?.kills_as_infected ?? 0, mm2?.kills_as_infected),
+            kills_as_survivor: buildValue(mm1?.kills_as_survivor ?? 0, mm2?.kills_as_survivor),
+            longest_time_as_survivor_seconds: buildValue(mm1?.longest_time_as_survivor_seconds ?? 0, mm2?.longest_time_as_survivor_seconds),
+            alpha_chance: buildValue(mm1?.alpha_chance ?? 0, mm2?.alpha_chance),
+        }, templates.mm);
+    },
+    'duel': (api1, api2) => {
+        let duel1 = api1?.stats?.Duels ?? {}, duel2 = api2?.stats?.Duels ?? {};
+        return buildText({
+            coins: buildValue(duel1?.coins ?? 0, duel2?.coins),
+            ping: buildValue(duel1?.ping ?? 200, duel2?.ping),
+            ...buildValues('wins', 'losses', 'wl_rate', duel1, duel2, 'wins', 'losses'),
+            best_winstreak: buildValue(duel1?.best_winstreak ?? 0, duel2?.best_winstreak),
+            current_winstreak: buildValue(duel1?.current_winstreak ?? 0, duel2?.current_winstreak),
+            ...buildValues('kills', 'deaths', 'kd_rate', duel1, duel2, 'kills', 'deaths'),
+        }, templates.duel);
+    },
+    'uhc': (api1, api2) => {
+        let uhc1 = api1?.stats?.UHC ?? {}, uhc2 = api2?.stats?.UHC ?? {};
+        return buildText({
+            score: buildValue(uhc1?.score ?? 0, uhc2?.score),
+            coins: buildValue(uhc1?.coins ?? 0, uhc2?.coins),
+            wins: buildValue(uhc1?.wins ?? 0, uhc2?.wins),
+            ...buildValues('kills', 'deaths', 'kd_rate', uhc1, uhc2, 'kills', 'deaths'),
+        }, templates.uhc);
+    },
+    'mw': (api1, api2) => {
+        let mw1 = api1?.stats?.Walls3 ?? {}, mw2 = api2?.stats?.Walls3 ?? {};
+        return buildText({
+            coins: buildValue(mw1?.coins ?? 0, mw2?.coins),
+            wither_damage: buildValue(mw1?.wither_damage ?? 0, mw2?.wither_damage),
+            chosen_class: buildValue(mw1?.chosen_class ?? 'None', mw2?.chosen_class),
+            ...buildValues('wins', 'losses', 'wl_rate', mw1, mw2, 'wins', 'losses'),
+            ...buildValues('kills', 'deaths', 'kd_rate', mw1, mw2, 'kills', 'deaths'),
+            assists: buildValue(mw1?.assists ?? 0, mw2?.assists),
+            ...buildValues('final_kills', 'final_deaths', 'fkdr', mw1, mw2, 'final_kills', 'final_deaths'),
+            final_assists: buildValue(mw1?.final_assists ?? 0, mw2?.final_assists),
+        }, templates.mw);
+    },
+    'bb': (api1, api2) => {
+        let bb1 = api1?.stats?.BuildBattle ?? {}, bb2 = api2?.stats?.BuildBattle ?? {};
+        return buildText({
+            games_played: buildValue(bb1?.games_played ?? 0, bb2?.games_played),
+            score: buildValue(bb1?.score ?? 0, bb2?.score),
+            wins: buildValue(bb1?.wins ?? 0, bb2?.wins),
+            wins_solo_normal: buildValue(bb1?.wins_solo_normal ?? 0, bb2?.wins_solo_normal),
+            wins_teams_normal: buildValue(bb1?.wins_teams_normal ?? 0, bb2?.wins_teams_normal),
+            wins_solo_pro: buildValue(bb1?.wins_solo_pro ?? 0, bb2?.wins_solo_pro),
+            wins_guess_the_build: buildValue(bb1?.wins_guess_the_build ?? 0, bb2?.wins_guess_the_build),
+        }, templates.bb);
+    },
+    'bsg': (api1, api2) => {
+        let bsg1 = api1?.stats?.Blitz ?? {}, bsg2 = api2?.stats?.Blitz ?? {};
+        return buildText({
+            coins: buildValue(bsg1?.coins ?? 0, bsg2?.coins),
+            chests_opened: buildValue(bsg1?.chests_opened ?? 0, bsg2?.chests_opened),
+            games_played: buildValue(bsg1?.games_played ?? 0, bsg2?.games_played),
+            wins: buildValue(bsg1?.wins ?? 0, bsg2?.wins),
+            ...buildValues('kills', 'deaths', 'kd_rate', bsg1, bsg2, 'kills', 'deaths'),
+        }, templates.bsg);
+    }
+}
+
+window.buildData = buildData;

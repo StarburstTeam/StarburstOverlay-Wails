@@ -2,7 +2,7 @@ import { Config } from './config'
 import { I18n } from './i18n'
 import { Hypixel, modeList, socialMediaList, getSocialMedia } from './hypixel'
 import { formatColor } from './util'
-import { getData } from './i18n/hypixel_i18n'
+import { buildData, getData, readTemplateData } from './i18n/hypixel_i18n'
 import { $ } from './global'
 
 const config = new Config(`config.json`, {
@@ -26,6 +26,7 @@ window.onload = async () => {
     await i18n.load();
     i18n.initPage();
     hypixel = new Hypixel(config.get('apiKey'));
+    await readTemplateData(config);
 
     $.id('minimize').onclick = _ => window.runtime.WindowMinimise();
     $.id('quit').onclick = _ => window.runtime.Quit();
@@ -96,7 +97,7 @@ const showDetail = (mode) => {
     } else {
         if (latestmode != '')
             $.id(latestmode + 'detail').innerHTML = '';
-        $.id(mode + 'detail').innerHTML = getData[config.get('lang')][mode](hypixel.data[searchPlayerName].player);
+        $.id(mode + 'detail').innerHTML = buildData[mode](hypixel.data[searchPlayerName].player);
         latestmode = mode;
     }
 }
