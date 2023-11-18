@@ -77,13 +77,9 @@ jobs:
           wails build -webview2 embed -nsis
           cd build/installer
           ls
-  jobs_r:
-    needs: jobs_window
-    name: Upload Files
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload Release
         uses: actions/upload-artifact@v3
         with:
           name: Windows Installer
           path: build/installer/Starburst Overlay-installer.exe
+          retention-days: 7
