@@ -9,7 +9,8 @@ export class Hypixel {
     constructor(apiKey) {
         this.apiKey = apiKey;
         this.self_ign = '';
-        this.owner_guild_id = ''
+        this.previous_data = '';
+        this.owner_guild_id = '';
         this.data = {};
         this.verifying = true;
         this.uuids = [];
@@ -20,7 +21,9 @@ export class Hypixel {
     setSelfIgn = async (ign) => {
         this.self_ign = ign;
         this.self_uuid = await this.getPlayerUuid(ign);
-        this.owner_guild_id = await this.getGuildData(this.self_uuid).then(json => json?.guild?._id ?? '')
+        await this.download(ign);
+        this.previous_data = this.data[ign] ?? {};
+        this.owner_guild_id = this.data[ign]?.guild?._id ?? '';
     }
     getPlayerUuid = async (name) => {//null when the player not found
         if (this.uuids[name] != null) return this.uuids[name];

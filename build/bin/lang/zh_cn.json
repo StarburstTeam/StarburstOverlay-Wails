@@ -85,7 +85,9 @@
         "log_tooltip": "当前客户端的日志路径",
         "api_tooltip": "从developer.hypixel.net获取",
         "game_mode_tooltip": "你当前正在玩的游戏模式",
-        "done": "完成"
+        "done": "完成",
+        "updateSession":"刷新",
+        "resetSession":"重置"
     },
     "mode": [
         {

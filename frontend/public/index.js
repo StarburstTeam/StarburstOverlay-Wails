@@ -6,7 +6,7 @@ import { loadBlacklist } from './blacklist'
 import { setTestTime, onTestClick, resetTest } from './cps'
 import { formatColor } from './util'
 import { $ } from './global'
-import { readTemplateData } from './i18n/hypixel_i18n'
+import { buildData, readTemplateData } from './i18n/hypixel_i18n'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
@@ -45,7 +45,7 @@ window.onload = async () => {
     $.id('search').onclick = _ => openSearchPage();
     $.id('settings').onclick = _ => switchPage('settingPage');
     $.id('info').onclick = _ => switchPage('infoPage');
-    $.id('session').onclick = _ => switchPage('sessionPage');
+    $.id('session').onclick = _ => { updateSession(); switchPage('sessionPage'); }
 
     $.id('lang').onclick = async _ => {
         config.set('lang', $.id('lang').value);
@@ -88,10 +88,14 @@ window.onload = async () => {
         $.id('search_single').value = '';
     }
 
+    $.id('updateSession').onclick = _ => updateSession();
+    $.id('resetSession').onclick = _ => { hypixel.previous_data = hypixel.data[hypixel.self_ign]; updateSession(); }
+
     window.hypixel = hypixel = new Hypixel(config.get('apiKey'));
     hypixel.setSelfIgn(config.get('ign'));
     setInterval(_ => updateApiRate(), 1000);
 
+    updateSession();
     updateHTML();
     nowType = config.get('lastType');
     nowSub = config.get('lastSub');
@@ -408,6 +412,13 @@ const copyApiKey = () => {
     navigator.clipboard.writeText($.id('apiKey').value);
     $.id('copy_api_key').innerHTML = i18n.data[i18n.current].page.copied_api_key;
     setTimeout(_ => $.id('copy_api_key').innerHTML = i18n.data[i18n.current].page.copy_api_key, 1000)
+}
+
+const updateSession = async () => {
+    await hypixel.download(hypixel.self_ign);
+    $.id('player_name').innerHTML = formatColor(hypixel.formatName(hypixel.self_ign));
+    $.id('session_data').innerHTML = buildData[nowType](hypixel.previous_data?.player, hypixel.data[hypixel.self_ign]?.player).replaceAll('<br>', '<br><br>').replaceAll('|', '<br>');
+    $.id('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(hypixel.self_ign)}?overlay`;
 }
 
 window.addManual = addManual;

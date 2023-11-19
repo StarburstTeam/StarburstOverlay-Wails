@@ -165,12 +165,15 @@
         <p class="infopage" style="color:aqua" id="link_github"
             onclick="window.go.main.App.OpenExternal('https://github.com/IAFEnvoy/StarburstOverlay-Wails/issues')">
             &nbsp; If you meet any problems or ideas, tell me on my Github! (Click here to open)</p>
-        <!-- <div>
-            <button class="searchButton" onclick="alert('注入成功！')">点击进行注入</button>
-        </div> -->
     </div>
-    <div id="sessionPage" style="text-align:center" hidden>
-        This page is under development and will be available in future version.
+    <div id="sessionPage" hidden>
+        <button id="updateSession" class="setting_button" style="position:relative;left:20px;top:10px">Update
+            Now</button>
+        <button id="resetSession" class="setting_button" style="position:relative;left:20px;top:10px">Reset
+            Session</button>
+        <div id="player_name" class="infoData" style="font-size:x-large;position:relative;top:20px;left:20px;"></div>
+        <div id="session_data" class="infoData" style="position:relative;top:40px;left:20px;"></div>
+        <img id="skin" style="position:absolute;right:20px;top:60px">
     </div>
     <div id="message" class="message" style="position:absolute;left:25%;width:50%;height:auto;bottom:50px;">
     </div>
