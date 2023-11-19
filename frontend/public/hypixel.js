@@ -139,7 +139,7 @@ export class Hypixel {
     }
     formatName = (name) => `${this.getRank(name)}${this.data[name].player.displayname}${this.getGuildTag(name)}`;
     getLevel = (exp) => exp < 0 ? 1 : (1 - 3.5 + Math.sqrt(12.25 + 0.0008 * (exp ?? 0))).toFixed(1);
-    getTitle = (type) => {
+    getTitle = (type, gameTitle) => {
         let title = gameTitle[type];
         if (title != null) return title;
         return [];
@@ -392,12 +392,3 @@ export const getThePitLevel = (pitProfile) => {
 
 export const socialMediaList = ['DISCORD', 'HYPIXEL', 'TWITCH', 'TWITTER', 'YOUTUBE'];
 export const getSocialMedia = (platform, api) => api?.socialMedia?.links[platform] ?? null;
-
-export let gameTitle, subGame;
-
-export const readDisplayData = async (config) => {
-    let path = `${await window.go.main.App.GetPath('this')}json\\title_mode_${config.get('lang')}.json`;
-    let title_mode = JSON.parse(await window.go.main.App.ReadJsonString(path));
-    gameTitle = title_mode.title;
-    subGame = title_mode.mode;
-}

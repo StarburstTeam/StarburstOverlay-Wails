@@ -1,8 +1,6 @@
 import { formatNameString, formatDateTime, formatColor, formatColorFromString } from "../util";
 import { getThePitLevel } from "../hypixel";
 
-let templates = {};
-
 export const getData = {
     'en_us': {
         "ov": (api) => {
@@ -286,11 +284,6 @@ const getGuildLevel = (exp) => {
  */
 const buildText = (data, template) => Object.keys(data).reduce((p, c) => p.replaceAll(`\${${c}}`, formatColor(data[c] + [], 15)), template.join('<br>'))
 
-export const readTemplateData = async (config) => {
-    let path = `${await window.go.main.App.GetPath('this')}json\\template_${config.get('lang')}.json`;
-    templates = JSON.parse(await window.go.main.App.ReadJsonString(path));
-}
-
 /**color=0 green↑ // color=1 red↑ */
 const buildValue = (v1, v2, color) => {
     if (v2 == null) return v1;
@@ -313,12 +306,12 @@ const buildValues = (name1, name2, nameR, obj1, obj2, key1, key2, fixed = 2) => 
     return result;
 }
 
-//全局搜索页面只需要传入第一个，session stats需要传入两个
+//全局搜索页面只需要传入第一个api，session stats需要传入两个
 export const buildData = {
-    'ov': (api1, api2) => {
+    'ov': (i18n, api1, api2) => {
         let achievements1 = api1?.achievements ?? {}, achievements2 = api2?.achievements ?? {};
     },
-    'bw': (api1, api2) => {
+    'bw': (i18n, api1, api2) => {
         let achievements1 = api1?.achievements ?? {}, achievements2 = api2?.achievements ?? {};
         let bedwar1 = api1.stats?.Bedwars ?? {}, bedwar2 = api2?.stats?.Bedwars ?? {};
         return buildText({
@@ -333,9 +326,9 @@ export const buildData = {
             gold: buildValue(bedwar1?.gold_resources_collected_bedwars ?? 0, bedwar2?.gold_resources_collected_bedwars),
             diamond: buildValue(bedwar1?.diamond_resources_collected_bedwars ?? 0, bedwar2?.diamond_resources_collected_bedwars),
             emerald: buildValue(bedwar1?.emerald_resources_collected_bedwars ?? 0, bedwar2?.emerald_resources_collected_bedwars),
-        }, templates.bw);
+        }, i18n.template().bw);
     },
-    'sw': (api1, api2) => {
+    'sw': (i18n, api1, api2) => {
         let skywar1 = api1?.stats?.SkyWars ?? {}, skywar2 = api2?.stats?.SkyWars ?? {};
         return buildText({
             levelFormatted: buildValue(skywar1?.levelFormatted ?? '§71⋆', skywar2?.levelFormatted),
@@ -344,9 +337,9 @@ export const buildData = {
             assists: buildValue(skywar1?.assists ?? 0, skywar2?.assists),
             ...buildValues('kills', 'deaths', 'kd_rate', skywar1, skywar2, 'kills', 'deaths'),
             ...buildValues('wins', 'losses', 'wl_rate', skywar1, skywar2, 'wins', 'losses'),
-        }, templates.sw);
+        }, i18n.template().sw);
     },
-    'mm': (api1, api2) => {
+    'mm': (i18n, api1, api2) => {
         let mm1 = api1?.stats?.MurderMystery ?? {}, mm2 = api2?.stats?.MurderMystery ?? {};
         return buildText({
             coins: buildValue(mm1?.coins ?? 0, mm2?.coins),
@@ -363,9 +356,9 @@ export const buildData = {
             kills_as_survivor: buildValue(mm1?.kills_as_survivor ?? 0, mm2?.kills_as_survivor),
             longest_time_as_survivor_seconds: buildValue(mm1?.longest_time_as_survivor_seconds ?? 0, mm2?.longest_time_as_survivor_seconds),
             alpha_chance: buildValue(mm1?.alpha_chance ?? 0, mm2?.alpha_chance),
-        }, templates.mm);
+        }, i18n.template().mm);
     },
-    'duel': (api1, api2) => {
+    'duel': (i18n, api1, api2) => {
         let duel1 = api1?.stats?.Duels ?? {}, duel2 = api2?.stats?.Duels ?? {};
         return buildText({
             coins: buildValue(duel1?.coins ?? 0, duel2?.coins),
@@ -374,18 +367,18 @@ export const buildData = {
             best_winstreak: buildValue(duel1?.best_winstreak ?? 0, duel2?.best_winstreak),
             current_winstreak: buildValue(duel1?.current_winstreak ?? 0, duel2?.current_winstreak),
             ...buildValues('kills', 'deaths', 'kd_rate', duel1, duel2, 'kills', 'deaths'),
-        }, templates.duel);
+        }, i18n.template().duel);
     },
-    'uhc': (api1, api2) => {
+    'uhc': (i18n, api1, api2) => {
         let uhc1 = api1?.stats?.UHC ?? {}, uhc2 = api2?.stats?.UHC ?? {};
         return buildText({
             score: buildValue(uhc1?.score ?? 0, uhc2?.score),
             coins: buildValue(uhc1?.coins ?? 0, uhc2?.coins),
             wins: buildValue(uhc1?.wins ?? 0, uhc2?.wins),
             ...buildValues('kills', 'deaths', 'kd_rate', uhc1, uhc2, 'kills', 'deaths'),
-        }, templates.uhc);
+        }, i18n.template().uhc);
     },
-    'mw': (api1, api2) => {
+    'mw': (i18n, api1, api2) => {
         let mw1 = api1?.stats?.Walls3 ?? {}, mw2 = api2?.stats?.Walls3 ?? {};
         return buildText({
             coins: buildValue(mw1?.coins ?? 0, mw2?.coins),
@@ -396,9 +389,9 @@ export const buildData = {
             assists: buildValue(mw1?.assists ?? 0, mw2?.assists),
             ...buildValues('final_kills', 'final_deaths', 'fkdr', mw1, mw2, 'final_kills', 'final_deaths'),
             final_assists: buildValue(mw1?.final_assists ?? 0, mw2?.final_assists),
-        }, templates.mw);
+        }, i18n.template().mw);
     },
-    'bb': (api1, api2) => {
+    'bb': (i18n, api1, api2) => {
         let bb1 = api1?.stats?.BuildBattle ?? {}, bb2 = api2?.stats?.BuildBattle ?? {};
         return buildText({
             games_played: buildValue(bb1?.games_played ?? 0, bb2?.games_played),
@@ -408,9 +401,9 @@ export const buildData = {
             wins_teams_normal: buildValue(bb1?.wins_teams_normal ?? 0, bb2?.wins_teams_normal),
             wins_solo_pro: buildValue(bb1?.wins_solo_pro ?? 0, bb2?.wins_solo_pro),
             wins_guess_the_build: buildValue(bb1?.wins_guess_the_build ?? 0, bb2?.wins_guess_the_build),
-        }, templates.bb);
+        }, i18n.template().bb);
     },
-    'bsg': (api1, api2) => {
+    'bsg': (i18n, api1, api2) => {
         let bsg1 = api1?.stats?.Blitz ?? {}, bsg2 = api2?.stats?.Blitz ?? {};
         return buildText({
             coins: buildValue(bsg1?.coins ?? 0, bsg2?.coins),
@@ -418,7 +411,7 @@ export const buildData = {
             games_played: buildValue(bsg1?.games_played ?? 0, bsg2?.games_played),
             wins: buildValue(bsg1?.wins ?? 0, bsg2?.wins),
             ...buildValues('kills', 'deaths', 'kd_rate', bsg1, bsg2, 'kills', 'deaths'),
-        }, templates.bsg);
+        }, i18n.template().bsg);
     }
 }
 

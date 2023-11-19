@@ -2,7 +2,7 @@ import { Config } from './config'
 import { I18n } from './i18n'
 import { Hypixel, modeList, socialMediaList, getSocialMedia } from './hypixel'
 import { formatColor } from './util'
-import { buildData, getData, readTemplateData } from './i18n/hypixel_i18n'
+import { buildData, getData } from './i18n/hypixel_i18n'
 import { $ } from './global'
 
 const config = new Config(`config.json`, {
@@ -26,7 +26,6 @@ window.onload = async () => {
     await i18n.load();
     i18n.initPage();
     hypixel = new Hypixel(config.get('apiKey'));
-    await readTemplateData(config);
 
     $.id('minimize').onclick = _ => window.runtime.WindowMinimise();
     $.id('quit').onclick = _ => window.runtime.Quit();
@@ -35,8 +34,6 @@ window.onload = async () => {
     $.id('downloadSkin').onclick = _ => downloadSkin();
 
     //init search page
-    let path = await window.go.main.App.GetPath('this') + `json/games_${config.get('lang')}.json`;
-    let games = JSON.parse(await window.go.main.App.ReadJsonString(path));
     modeList.reduce((p, c) => {
         let root = document.createElement('div');
         root.className = 'dataStyle';
@@ -44,7 +41,7 @@ window.onload = async () => {
         root.onclick = _ => showDetail(c);
         let name = document.createElement('div');
         name.style.fontSize = '20px';
-        name.innerHTML = games.find(it => it.short == c).name;
+        name.innerHTML = i18n.games().find(it => it.short == c).name;
         let detail = document.createElement('div');
         detail.id = `${c}detail`;
         root.appendChild(name);
@@ -97,7 +94,7 @@ const showDetail = (mode) => {
     } else {
         if (latestmode != '')
             $.id(latestmode + 'detail').innerHTML = '';
-        $.id(mode + 'detail').innerHTML = buildData[mode](hypixel.data[searchPlayerName].player);
+        $.id(mode + 'detail').innerHTML = buildData[mode](i18n, hypixel.data[searchPlayerName].player);
         latestmode = mode;
     }
 }

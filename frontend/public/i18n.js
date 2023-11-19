@@ -10,10 +10,13 @@ export class I18n {
         this.data = {};
         for (let i of jsons) {
             let d = JSON.parse(await window.go.main.App.ReadJsonString(i));
-            this.data[d.id] = { name: d.name, values: d.values, page: d.page, mode: d.mode };
+            this.data[d.id] = d;
         }
     }
     now = () => this.data[this.current].values;
+    games = () => this.data[this.current].games;
+    template = () => this.data[this.current].template;
+    titleMode = () => this.data[this.current].titleMode;
     set = (id) => this.current = id;
     initPage = () => {
         console.log(this.data);

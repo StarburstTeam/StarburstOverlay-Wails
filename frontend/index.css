@@ -1,3 +1,8 @@
+:root {
+    /* vars */
+    --theme-color: aqua;
+}
+
 @font-face {
     font-family: "consolas";
     src: url("consolas.ttf");
@@ -11,25 +16,6 @@ body {
     height: 100%;
     user-select: none;
     font-family: consolas;
-
-    /* VAPE V4 */
-    /* animation: rainbow 3s infinite linear; */
-    /* vars */
-    --theme-color: aqua;
-}
-
-@keyframes rainbow {
-    0% {
-        filter: hue-rotate(0deg);
-    }
-
-    50% {
-        filter: hue-rotate(180deg);
-    }
-
-    100% {
-        filter: hue-rotate(360deg);
-    }
 }
 
 .title {

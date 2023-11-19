@@ -1,15 +1,16 @@
 import { Tail } from './tail'
 import { Config } from './config'
 import { I18n } from './i18n'
-import { Hypixel, readDisplayData, subGame } from './hypixel'
+import { Hypixel } from './hypixel'
 import { loadBlacklist } from './blacklist'
 import { setTestTime, onTestClick, resetTest } from './cps'
 import { formatColor } from './util'
 import { $ } from './global'
-import { buildData, readTemplateData } from './i18n/hypixel_i18n'
+import { buildData } from './i18n/hypixel_i18n'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
+    lang_hypixel: 'en_us',
     ign: '',
     logPath: '',
     apiKey: '',
@@ -17,12 +18,14 @@ const config = new Config(`config.json`, {
     lastSub: '',
     autoShrink: true,
     notification: true,
+});
+const windowConfig = new Config(`window.json`, {
     width: 1080,
     height: 550,
     x: 40,
-    y: 20
+    y: 20,
 });
-let i18n = null;
+let i18n = null, i18n_hypixel = null;
 let players = [], party = [], hypixel = null, nowType = null, nowSub = null, inLobby = false, missingPlayer = false, numplayers = 0, hasLog = false;
 
 window.onload = async () => {
@@ -30,14 +33,17 @@ window.onload = async () => {
         window.go.main.App.OpenSelf('setup');
         window.runtime.Quit();
     }
-    window.runtime.WindowSetSize(config.get('width'), config.get('height'));
-    window.runtime.WindowSetPosition(config.get('x'), config.get('y'));
-    window.screenX = window.screenLeft = config.get('x');
-    window.screenY = window.screenTop = config.get('y');
+    await windowConfig.load();
+    window.runtime.WindowSetSize(windowConfig.get('width'), windowConfig.get('height'));
+    window.runtime.WindowSetPosition(windowConfig.get('x'), windowConfig.get('y'));
+    window.screenX = window.screenLeft = windowConfig.get('x');
+    window.screenY = window.screenTop = windowConfig.get('y');
 
     i18n = new I18n(config.get('lang'));
     await i18n.load();
     i18n.initPage();
+    i18n_hypixel = new I18n(config.get('lang_hypixel'));
+    await i18n_hypixel.load();
 
     loadBlacklist();
 
@@ -52,6 +58,11 @@ window.onload = async () => {
         i18n = new I18n(config.get('lang'));
         await i18n.load();
         i18n.initPage();
+    }
+    $.id('lang_hypixel').onclick = async _ => {
+        config.set('lang_hypixel', $.id('lang_hypixel').value);
+        i18n_hypixel = new I18n(config.get('lang_hypixel'));
+        await i18n_hypixel.load();
     }
     $.id('setting_change_log_path').onclick = _ => selectLogFile();
     $.id('apiKey').onclick = _ => {
@@ -104,10 +115,9 @@ window.onload = async () => {
     $.id('ign').value = config.get('ign');
     $.id('notification').checked = config.get('notification');
     $.id('lang').value = config.get('lang');
+    $.id('lang_hypixel').value = config.get('lang_hypixel');
     $.id('infotype').innerHTML = i18n.getMainModeHTML();
     pushError();
-    await readDisplayData(config);
-    await readTemplateData(config);
     changeCategory();
     loadSubGame(nowSub);
     $.id('infotype').value = nowType;
@@ -122,10 +132,10 @@ window.onload = async () => {
         let changed = false;
         let msg = data.substring(s + 7).replace(' [C]', '').replace('\r', '');
         console.log(msg);
-        if (msg.indexOf(i18n.now().chat_online) != -1 && msg.indexOf(',') != -1) {//the result of /who command
+        if (msg.indexOf(i18n_hypixel.now().chat_online) != -1 && msg.indexOf(',') != -1) {//the result of /who command
             if (inLobby) return;
             resize(true);
-            let who = msg.replace(i18n.now().chat_online, '').split(', ');
+            let who = msg.replace(i18n_hypixel.now().chat_online, '').split(', ');
             players = [];
             for (let i = 0; i < who.length; i++) {
                 players.push(who[i]);
@@ -133,10 +143,10 @@ window.onload = async () => {
             }
             missingPlayer = false;
             changed = true;
-        } else if (msg.indexOf(i18n.now().chat_player_join) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_player_join) != -1 && msg.indexOf(':') == -1) {
             resize(true);
             inLobby = false;
-            let join = msg.split(i18n.now().chat_player_join)[0];
+            let join = msg.split(i18n_hypixel.now().chat_player_join)[0];
             if (players.find(x => x == join) == null) {
                 players.push(join);
                 hypixel.download(join, updateHTML);
@@ -146,9 +156,9 @@ window.onload = async () => {
                 numplayers = Number(msg.substring(msg.indexOf('(') + 1, msg.indexOf('/')));
                 missingPlayer = players.length < numplayers;
             }
-        } else if (msg.indexOf(i18n.now().chat_player_quit) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_player_quit) != -1 && msg.indexOf(':') == -1) {
             inLobby = false;
-            let left = msg.split(i18n.now().chat_player_quit)[0];
+            let left = msg.split(i18n_hypixel.now().chat_player_quit)[0];
             if (players.find(x => x == left) != null) {
                 players.remove(left);
                 numplayers -= 1;
@@ -156,12 +166,12 @@ window.onload = async () => {
                 missingPlayer = players.length < numplayers;
                 changed = true;
             }
-        } else if (msg.indexOf(i18n.now().chat_sending) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_sending) != -1 && msg.indexOf(':') == -1) {
             resize(false);
             inLobby = false;
             players = [];
             changed = true;
-        } else if (msg.indexOf(i18n.now().chat_join_lobby) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_join_lobby) != -1 && msg.indexOf(':') == -1) {
             if (inLobby) return;
             resize(false);
             inLobby = true;
@@ -172,23 +182,23 @@ window.onload = async () => {
             // } else if (msg.indexOf('You left the party') !== -1 && msg.indexOf(':') === -1 && inlobby) {
             // } else if (msg.indexOf('left the party') !== -1 && msg.indexOf(':') === -1 && inlobby) {
             // } else if (inlobby && (msg.indexOf('Party Leader:') === 0 || msg.indexOf('Party Moderators:') === 0 || msg.indexOf('Party Members:') === 0)) {
-        } else if ((msg.indexOf(i18n.now().chat_final_kill) != -1 || msg.indexOf(i18n.now().chat_disconnect) != -1) && msg.indexOf(':') == -1) {
+        } else if ((msg.indexOf(i18n_hypixel.now().chat_final_kill) != -1 || msg.indexOf(i18n_hypixel.now().chat_disconnect) != -1) && msg.indexOf(':') == -1) {
             let left = msg.split(' ')[0];
             if (players.find(x => x == left) != null) {
                 players.remove(left);
                 changed = true;
             }
-        } else if (msg.indexOf(i18n.now().chat_reconnect) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_reconnect) != -1 && msg.indexOf(':') == -1) {
             let join = msg.split(' ')[0];
             if (players.find(x => x == join) == null) {
                 players.push(join);
                 changed = true;
             }
-        } else if (msg.indexOf(i18n.now().chat_game_start_1_second) != -1 && msg.indexOf(':') == -1) {
+        } else if (msg.indexOf(i18n_hypixel.now().chat_game_start_1_second) != -1 && msg.indexOf(':') == -1) {
             resize(false);
             if (config.get('notification'))
-                window.go.main.App.ShowNotification(i18n.now().notification_start_title, i18n.now().notification_start_body, []);
-        } else if (msg.indexOf(i18n.now().chat_game_start_0_second) != -1 && msg.indexOf(':') == -1) resize(false);
+                window.go.main.App.ShowNotification(i18n_hypixel.now().notification_start_title, i18n_hypixel.now().notification_start_body, []);
+        } else if (msg.indexOf(i18n_hypixel.now().chat_game_start_0_second) != -1 && msg.indexOf(':') == -1) resize(false);
         // else if (msg.indexOf('https://rewards.hypixel.net/claim-reward/') != -1) {
         //     let url = `https://rewards.hypixel.net/claim-reward/${msg.split('https://rewards.hypixel.net/claim-reward/')[1].split('\\n')[0]}`;
         //     console.log(url);
@@ -239,8 +249,8 @@ const resize = (show, force) => {
     if (show != null) nowShow = show;
     else nowShow ^= true;
     $.id('show').style.transform = `rotate(${nowShow ? 0 : 90}deg)`;
-    console.log({ w: config.get('width'), h: nowShow ? config.get('height') : 40 })
-    window.runtime.WindowSetSize(config.get('width'), nowShow ? config.get('height') : 40);
+    console.log({ w: windowConfig.get('width'), h: nowShow ? windowConfig.get('height') : 40 })
+    window.runtime.WindowSetSize(windowConfig.get('width'), nowShow ? windowConfig.get('height') : 40);
 }
 
 const changeDiv = () => {
@@ -251,7 +261,7 @@ const changeDiv = () => {
 }
 
 const loadSubGame = (val) => {
-    $.id('subGame').innerHTML = subGame[nowType] != null ? subGame[nowType].reduce((p, c) => p + `<option value="${c.id}">${c.name}</option>`, '') : '';
+    $.id('subGame').innerHTML = i18n.titleMode().mode[nowType] != null ? i18n.titleMode().mode[nowType].reduce((p, c) => p + `<option value="${c.id}">${c.name}</option>`, '') : '';
     setSubGame(val);
 }
 
@@ -364,7 +374,7 @@ const selectLogFile = async () => {
 }
 
 const clearMainPanel = () => {
-    let main = $.id('main'), category = hypixel.getTitle(nowType);
+    let main = $.id('main'), category = hypixel.getTitle(nowType, i18n.titleMode().title);
     main.innerHTML = `<tr><th id="sort_8" style="width:60px">${i18n.now().hud_main_tag}</th>
     <th id="sort_1" style="width:60px">${i18n.now().hud_main_level}</th>
     <th id="sort_2" style="width:400px">${i18n.now().hud_main_players}</th>
@@ -374,15 +384,15 @@ const clearMainPanel = () => {
 window.onresize = async () => {
     if (config.config != null && nowShow) {
         let size = await window.runtime.WindowGetSize();
-        config.set('width', size.w);
-        config.set('height', size.h);
+        windowConfig.set('width', size.w);
+        windowConfig.set('height', size.h);
     }
 }
 
 const onClose = async () => {
     let position = await window.runtime.WindowGetPosition();
-    config.set('x', position.x);
-    config.set('y', position.y);
+    windowConfig.set('x', position.x);
+    windowConfig.set('y', position.y);
 }
 
 let stable_message = false;
@@ -417,7 +427,7 @@ const copyApiKey = () => {
 const updateSession = async () => {
     await hypixel.download(hypixel.self_ign);
     $.id('player_name').innerHTML = formatColor(hypixel.formatName(hypixel.self_ign));
-    $.id('session_data').innerHTML = buildData[nowType](hypixel.previous_data?.player, hypixel.data[hypixel.self_ign]?.player).replaceAll('<br>', '<br><br>').replaceAll('|', '<br>');
+    $.id('session_data').innerHTML = buildData[nowType](i18n, hypixel.previous_data?.player, hypixel.data[hypixel.self_ign]?.player).replaceAll('<br>', '<br><br>').replaceAll('|', '<br>');
     $.id('skin').src = `https://crafatar.com/renders/body/${await hypixel.getPlayerUuid(hypixel.self_ign)}?overlay`;
 }
 
