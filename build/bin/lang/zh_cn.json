@@ -2,7 +2,9 @@
     "id": "zh_cn",
     "name": "简体中文",
     "values": {
-        "chat_online": "ONLINE: ",
+        "(": "（",
+        "chat_online": "ONLINE:",
+        "chat_online_2": "在线：",
         "chat_player_join": "加入了游戏",
         "chat_player_quit": "已退出",
         "chat_sending": "正在前往",
@@ -89,7 +91,9 @@
         "game_mode_tooltip": "你当前正在玩的游戏模式",
         "done": "完成",
         "updateSession": "刷新",
-        "resetSession": "重置"
+        "resetSession": "重置",
+        "copy_chat_suffix": "复制聊天按钮后缀",
+        "copy_chat_suffix_tooltip": "用以去除复制聊天按钮的输出，比如[C]"
     },
     "mode": [
         {

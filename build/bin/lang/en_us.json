@@ -2,7 +2,9 @@
     "id": "en_us",
     "name": "English",
     "values": {
-        "chat_online": "ONLINE: ",
+        "(": "(",
+        "chat_online": "ONLINE:",
+        "chat_online_2": "ONLINE:",
         "chat_player_join": " has joined",
         "chat_player_quit": " has quit",
         "chat_sending": "Sending you",
@@ -89,7 +91,9 @@
         "game_mode_tooltip": "The game you currently playing",
         "done": "Done",
         "updateSession": "Update Now",
-        "resetSession": "Reset Session"
+        "resetSession": "Reset Session",
+        "copy_chat_suffix": "Copy Chat Suffix",
+        "copy_chat_suffix_tooltip": "Exclude copy chat button in log. Example: [C]"
     },
     "mode": [
         {

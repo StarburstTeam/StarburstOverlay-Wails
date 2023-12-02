@@ -288,21 +288,21 @@ const buildText = (data, template) => Object.keys(data).reduce((p, c) => p.repla
 const buildValue = (v1, v2, color) => {
     if (v2 == null) return v1;
     let s = v1 + ' -> ' + v2 + ' ';
-    let c = 'aca';
-    if (v1 < v2) return `§${c[0 + color ?? 0]}${s} ↑${v2 - v1}`;
+    let delta = (v2 - v1).toFixed(v1 % 1 && v2 % 1 ? 0 : 2);
+    if (v1 < v2) return `§${color ? 'c' : 'a'}${s} ↑${delta}`;
     if (v1 == v2) return `§e${s} ×0`;
-    if (v1 > v2) return `§${c[1 + color ?? 0]}${s} ↓${v1 - v2}`;
+    if (v1 > v2) return `§${color ? 'a' : 'c'}${s} ↓${-delta}`;
     return s;
 }
 
 const buildValues = (name1, name2, nameR, obj1, obj2, key1, key2, fixed = 2) => {
     let value1_1 = obj1?.[key1] ?? 0, value1_2 = obj1?.[key2] ?? 0, value2_1 = obj2?.[key1], value2_2 = obj2?.[key2];
     let result = {};
-    result[name1] = buildValue(value1_1, value2_1, 0);
-    result[name2] = buildValue(value1_2, value2_2, 1);
+    result[name1] = buildValue(value1_1, value2_1);
+    result[name2] = buildValue(value1_2, value2_2, true);
     let r1 = (value1_1 / value1_2).toFixed(fixed);
-    if (value2_1 != null && value2_2 != null) result[nameR] = buildValue(r1, (value2_1 / value2_2).toFixed(fixed), 0);
-    else result[nameR] = buildValue(r1, 0);
+    if (value2_1 != null && value2_2 != null) result[nameR] = buildValue(r1, (value2_1 / value2_2).toFixed(fixed));
+    else result[nameR] = buildValue(r1);
     return result;
 }
 

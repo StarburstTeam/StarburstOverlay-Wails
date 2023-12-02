@@ -18,6 +18,7 @@ const config = new Config(`config.json`, {
     lastSub: '',
     autoShrink: true,
     notification: true,
+    copyChatSuffix: ' [C]'
 });
 const windowConfig = new Config(`window.json`, {
     width: 1080,
@@ -74,6 +75,7 @@ window.onload = async () => {
         config.set('ign', $.id('ign').value);
         hypixel.setSelfIgn(config.get('ign'));
     }
+    $.id('copyChatSuffix').onclick = _ => config.set('copyChatSuffix', $.id('copyChatSuffix').value);
     $.id('infotype').onclick = _ => changeDiv();
     $.id('subGame').onclick = _ => setSubGame();
     $.id('autoShrink').onclick = _ => config.set('autoShrink', $.id('autoShrink').checked);
@@ -116,6 +118,7 @@ window.onload = async () => {
     $.id('notification').checked = config.get('notification');
     $.id('lang').value = config.get('lang');
     $.id('lang_hypixel').value = config.get('lang_hypixel');
+    $.id('copyChatSuffix').value = config.get('copyChatSuffix');
     $.id('infotype').innerHTML = i18n.getMainModeHTML();
     pushError();
     changeCategory();
@@ -130,12 +133,13 @@ window.onload = async () => {
         let s = data.indexOf('[CHAT]');
         if (s == -1) return;//not a chat log
         let changed = false;
-        let msg = data.substring(s + 7).replace(' [C]', '').replace('\r', '');
+        let msg = data.substring(s + 7).replace(config.get('copyChatSuffix'), '').replace('\r', '');
         console.log(msg);
-        if (msg.indexOf(i18n_hypixel.now().chat_online) != -1 && msg.indexOf(',') != -1) {//the result of /who command
+        if ((msg.indexOf(i18n_hypixel.now().chat_online) != -1 || msg.indexOf(i18n_hypixel.now().chat_online_2) != -1) && msg.indexOf(',') != -1) {
+            //the result of /who command
             if (inLobby) return;
             resize(true);
-            let who = msg.replace(i18n_hypixel.now().chat_online, '').split(', ');
+            let who = msg.replaceAll(' ', '').replace(i18n_hypixel.now().chat_online, '').replace(i18n_hypixel.now().chat_online_2, '').split(',');
             players = [];
             for (let i = 0; i < who.length; i++) {
                 players.push(who[i]);
@@ -153,7 +157,7 @@ window.onload = async () => {
                 changed = true;
             }
             if (msg.indexOf('/') != -1) {
-                numplayers = Number(msg.substring(msg.indexOf('(') + 1, msg.indexOf('/')));
+                numplayers = Number(msg.substring(msg.indexOf(i18n_hypixel.now()['(']) + 1, msg.indexOf('/')));
                 missingPlayer = players.length < numplayers;
             }
         } else if (msg.indexOf(i18n_hypixel.now().chat_player_quit) != -1 && msg.indexOf(':') == -1) {

@@ -4,6 +4,7 @@ import { I18n } from "./i18n";
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
+    lang_hypixel: 'en_us',
     ign: '',
     logPath: '',
     apiKey: '',
@@ -11,10 +12,6 @@ const config = new Config(`config.json`, {
     lastSub: '',
     autoShrink: true,
     notification: true,
-    width: 1080,
-    height: 550,
-    x: 40,
-    y: 20
 });
 
 let i18n = null;
@@ -32,6 +29,7 @@ window.onload = async () => {
     }
     $.id('done').onclick = async _ => {
         await config.set('lang', $.id('lang').value);
+        await config.set('lang_hypixel', $.id('lang_hypixel').value);
         await config.set('ign', $.id('ign').value);
         await config.set('logPath', $.id('logpath').value);
         await config.set('apiKey', $.id('apikey').value);

@@ -7,16 +7,14 @@ import { $ } from './global'
 
 const config = new Config(`config.json`, {
     lang: 'en_us',
+    lang_hypixel: 'en_us',
+    ign: '',
     logPath: '',
     apiKey: '',
     lastType: 'bw',
     lastSub: '',
     autoShrink: true,
     notification: true,
-    width: 1080,
-    height: 550,
-    x: 40,
-    y: 20
 });
 let i18n = null, hypixel = null;
 

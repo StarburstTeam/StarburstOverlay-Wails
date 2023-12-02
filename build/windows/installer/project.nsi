@@ -94,7 +94,6 @@ Section
     !insertmacro wails.files
 
     #Install Extra Files
-    File /r "..\..\bin\json"
     File /r "..\..\bin\lang"
     File "..\..\bin\icon.ico"
 
